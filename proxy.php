@@ -27,7 +27,48 @@ function getCoordinates($location) {
     return $coordinates;
 }
 
-if (isset($_POST["radius"]) && isset($_POST["lat"]) && isset($_POST["lng"])) {
+if (isset($_POST["engine"]) && $_POST["engine"] === "shashin" && isset($_POST["latitude"]) && $_POST["latitude"] !== "" && isset($_POST["longitude"]) && $_POST["longitude"] !== "" && isset($_POST["query"])) {
+    $query = $_POST["query"];
+
+    $latitude = $_POST["latitude"];
+    $longitude = $_POST["longitude"];
+
+    $baseUrl = "<shashin_base_url>";
+    $apiUrl = $baseUrl."/api/v1/mapdata";
+    $apiKey = "<shashin_api_key>";
+
+    $opts = array(
+        'http' => array(
+            'method' => 'GET',
+            'header' =>
+                'X-Api-Key: ' . $apiKey . "\r\n" .
+                'Content-Type: application/json;charset=UTF-8'
+        )
+    );
+
+    $context = stream_context_create($opts);
+    $json = file_get_contents($apiUrl, false, $context);
+    $result = json_decode($json, true);
+    $processedResults = array();
+
+    if (array_key_exists("mapdata",$result)) {
+        foreach($result["mapdata"] as $metadata) {
+            if (($metadata["placeName"] !== null && $metadata["placeName"] !== "" && $query !== "" && str_contains(strtolower($metadata["placeName"]), strtolower($query))) || $query === "") {
+                $currStatus = array();
+                $currStatus["id"] = $metadata["id"];
+                $currStatus["date"] = $metadata["year"] + $metadata["month"] + $metadata["day"];
+                $currStatus["placeName"] = $metadata["placeName"];
+                $currStatus["coordinates"] = [$metadata["lat"], $metadata["lng"]];
+                $currStatus["mapMarkerUrl"] = $baseUrl . $metadata["mapMarkerUrl"];
+                $currStatus["thumbnailUrlSmall"] = $baseUrl . $metadata["thumbnailUrlSmall"];
+                $currStatus["videoUrl"] = ($metadata["videoUrl"] !== null && $metadata["videoUrl"] !== "") ? $baseUrl . $metadata["videoUrl"] : "";
+                $processedResults[] = $currStatus;
+            }
+        }
+    }
+
+    echo json_encode($processedResults);
+} else if (isset($_POST["radius"]) && isset($_POST["lat"]) && isset($_POST["lng"])) {
 
     $consumerKey = "<twiiter_api_consumer_key>";
     $consumerSecret = "<twiiter_api_consumer_secret>";

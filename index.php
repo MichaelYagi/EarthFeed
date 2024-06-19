@@ -3,47 +3,49 @@
     <head>
         <script src="http://www.webglearth.com/v2/api.js"></script>
         <script>
-            var earth;
-            var query = "";
-            var currMarkers = {};
-            var animateRequest;
+            let earth;
+            let query = "";
+            let currMarkers = {};
+            let animateRequest;
 
             function setQuery(aQuery, currCoordinates, radius, earth, WE) {
                 query = aQuery;
-                for (var tweetId in currMarkers) {
-                    if (currMarkers.hasOwnProperty(tweetId)) {
-                        var marker = currMarkers[tweetId];
+                for (const id in currMarkers) {
+                    if (currMarkers.hasOwnProperty(id)) {
+                        const marker = currMarkers[id];
                         marker.removeFrom(earth);
                     }
                 }
                 currMarkers = {};
-                getTweets(currCoordinates,radius,earth,WE);
+                // getTweets(currCoordinates,radius,earth,WE);
+                getShashin(currCoordinates,radius,earth,WE);
             }
 
             function initialize() {
                 earth = new WE.map('earth_div');
-                var currCoordinates = [46.8011, 8.2266];
+                let currCoordinates = [46.8011, 8.2266];
                 earth.setView(currCoordinates, 3);
-                var radius = 10000;
+                const radius = 10000;
                 WE.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
                     attribution: '© OpenStreetMap contributors'
                 }).addTo(earth);
 
                 // Start a simple rotation animation
-                var before = null;
-                var first = false;
+                let before = null;
+                let first = false;
 
                 function animate(now) {
                     // Array of lat/long
-                    var c = earth.getPosition();
+                    const c = earth.getPosition();
 
-                    var elapsed = before? now - before: 0;
+                    const elapsed = before ? now - before : 0;
                     before = now;
 
                     if (false === first || getHaversine(c[0],c[1],currCoordinates[0],currCoordinates[1]) > 9000) {
                         first = true;
                         currCoordinates = c;
-                        getTweets(c,radius,earth,WE);
+                        // getTweets(c,radius,earth,WE);
+                        getShashin(c,radius,earth,WE);
                     }
 
                     earth.setCenter([c[0], c[1] + 0.1*(elapsed/30)]);
@@ -52,12 +54,13 @@
 
                 function start() {
                     if (!animateRequest) {
-                        var d = new Date();
-                        var n = d.getMilliseconds();
+                        const d = new Date();
+                        let n = d.getMilliseconds();
                         if (null != before) {
                             before = null;
                             n = before;
                         }
+
                         animate(n);
                     }
                 }
@@ -68,6 +71,26 @@
                         animateRequest = undefined;
                     }
                 }
+
+                // let startTime = new Date();
+                // let lastRounded = 0;
+                // let rounded = 0;
+                // let elapsedTargetMS = 15000;
+                // requestAnimationFrame(function animate(now) {
+                //     const c = earth.getPosition();
+                //     const elapsed = before ? now - before : 0;
+                //     before = now;
+                //     earth.setCenter([c[0], c[1] + 0.1*(elapsed/30)]);
+                //     let endTime = new Date();
+                //     let timeElapsed = endTime - startTime;
+                //     rounded = Math.round(timeElapsed/elapsedTargetMS)*elapsedTargetMS
+                //     if (rounded !== lastRounded) {
+                //         lastRounded = rounded;
+                //         getShashin(c,radius,earth,WE);
+                //     }
+                //
+                //     requestAnimationFrame(animate);
+                // });
 
                 start();
 
@@ -88,12 +111,41 @@
                 };
             }
 
-            function getTweets(coordinates, radius, earth, WE) {
-                var lat = coordinates[0];
-                var lng = coordinates[1];
-                var params = "radius=" + radius + "&lat=" + lat + "&lng=" + lng + "&query=" + query;
+            function getShashin(coordinates, radius, earth, WE) {
+                const params = "engine=shashin" + "&query=" + query + "&latitude=" + coordinates[0] + "&longitude=" + coordinates[1];
 
-                proxyRequest(params,function(response) {
+                proxyRequest(params,"POST",function(response) {
+                    console.log(response);
+                    for(let i = 0; i < response.length; i++) {
+                        const metadata = response[i];
+                        if (metadata["coordinates"] != null) {
+                            const marker = WE.marker(metadata["coordinates"]);
+                            marker["id"] = metadata["id"];
+                            marker.addTo(earth);
+                            currMarkers[metadata["id"]] = marker;
+                            let markerContent = '<img src="'+metadata["mapMarkerUrl"]+'""><br>';
+                            if (metadata["placeName"] !== null && metadata["placeName"].length > 0) {
+                                markerContent += metadata["placeName"];
+                            }
+
+                            if (metadata["videoUrl"].length > 0) {
+                                markerContent += "<br><a href='"+metadata["videoUrl"]+"' target='_blank'>Video link</a>";
+                            } else {
+                                markerContent += "<br><a href='"+metadata["thumbnailUrlOriginal"]+"' target='_blank'>Image link</a>";
+                            }
+
+                            marker.bindPopup(markerContent);
+                        }
+                    }
+                })
+            }
+
+            function getTweets(coordinates, radius, earth, WE) {
+                const lat = coordinates[0];
+                const lng = coordinates[1];
+                const params = "radius=" + radius + "&lat=" + lat + "&lng=" + lng + "&query=" + query;
+
+                proxyRequest(params,"POST",function(response) {
                     for(var i=0;i<response.length;i++) {
                         var tweet = response[i];
                         if (tweet["coordinates"] != null) {
@@ -113,15 +165,15 @@
                 })
             }
 
-            function proxyRequest(params,callback) {
-                var xhttp = new XMLHttpRequest();
+            function proxyRequest(params,action,callback) {
+                const xhttp = new XMLHttpRequest();
                 xhttp.timeout = 5000; // time in milliseconds
-                xhttp.open("POST", "./proxy.php", true);
+                xhttp.open(action, "./proxy.php", true);
                 xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
                 xhttp.onreadystatechange = function() {
                     if (xhttp.readyState == 4) {
                         if (xhttp.status == 200) {
-                            var respObj = JSON.parse(xhttp.responseText);
+                            const respObj = JSON.parse(xhttp.responseText);
                             callback(respObj);
                         }
                     }
@@ -155,7 +207,8 @@
     <body onload="initialize()">
         <div id="inputs">
             <form id="searchForm">
-                <input title="Search Query" type="text" id="query" name="query" value='"EARTHQUAKE WATCH" AND educaciondecr'>
+                <input title="Search Query" type="text" id="query" name="query" value='restaurant'>
+                <input type="submit">
             </form>
         </div>
         <div id="earth_div"></div>

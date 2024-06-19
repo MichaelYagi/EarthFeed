@@ -65,6 +65,14 @@ if (isset($_POST["engine"]) && $_POST["engine"] === "shashin" && isset($_POST["l
 
     $limit = 500;
     $offset = 0;
+    
+    if (isset($_POST["offset"])) {
+        $offset = $_POST["offset"];
+    }
+
+    if (isset($_POST["limit"])) {
+        $limit = $_POST["limit"];
+    }
 
     if (isset($_POST["offset"]) && isset($_POST["limit"])) {
         $limit = $_POST["limit"];

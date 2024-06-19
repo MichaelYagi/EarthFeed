@@ -119,7 +119,7 @@
                     for(let i = 0; i < response.length; i++) {
                         const metadata = response[i];
                         if (metadata["coordinates"] != null) {
-                            const marker = WE.marker(metadata["coordinates"], metadata["mapMarkerUrl"]);
+                            const marker = WE.marker(metadata["coordinates"], metadata["mapMarkerUrl"], 30, 30);
                             marker["id"] = metadata["id"];
                             marker.addTo(earth);
                             currMarkers[metadata["id"]] = marker;

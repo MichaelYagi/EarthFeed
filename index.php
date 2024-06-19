@@ -119,11 +119,11 @@
                     for(let i = 0; i < response.length; i++) {
                         const metadata = response[i];
                         if (metadata["coordinates"] != null) {
-                            const marker = WE.marker(metadata["coordinates"]);
+                            const marker = WE.marker(metadata["coordinates"], metadata["mapMarkerUrl"]);
                             marker["id"] = metadata["id"];
                             marker.addTo(earth);
                             currMarkers[metadata["id"]] = marker;
-                            let markerContent = '<img src="'+metadata["mapMarkerUrl"]+'""><br>';
+                            let markerContent = '<img src="'+metadata["thumbnailUrlSmall"]+'" height="100" "><br>';
                             markerContent += metadata["date"]+"<br><br>";
                             if (metadata["placeName"] !== null && metadata["placeName"].length > 0) {
                                 markerContent += metadata["placeName"]+"<br><br>";
@@ -147,16 +147,16 @@
                 const params = "radius=" + radius + "&lat=" + lat + "&lng=" + lng + "&query=" + query;
 
                 proxyRequest(params,"POST",function(response) {
-                    for(var i=0;i<response.length;i++) {
-                        var tweet = response[i];
+                    for(let i=0; i<response.length; i++) {
+                        const tweet = response[i];
                         if (tweet["coordinates"] != null) {
-                            var marker = WE.marker(tweet["coordinates"]);
+                            const marker = WE.marker(tweet["coordinates"]);
                             if (false === currMarkers.hasOwnProperty(tweet["id"])) {
                                 marker["tweetId"] = tweet["id"];
                                 marker.addTo(earth);
                                 currMarkers[tweet["id"]] = marker;
-                                var markerContent = tweet["user"].hasOwnProperty("profile_image_url") ?
-                                                    '<img src="' + tweet["user"]["profile_image_url"] + '" height="25"><br>' : '';
+                                let markerContent = tweet["user"].hasOwnProperty("profile_image_url") ?
+                                    '<img src="' + tweet["user"]["profile_image_url"] + '" height="25"><br>' : '';
                                 markerContent += "<a href='" + tweet["twitter_url"] + "' target='_blank'>" + tweet["user"]["screen_name"] + "</a>:<br>" + tweet["text"];
                                 marker.bindPopup(markerContent);
                             }
@@ -172,8 +172,8 @@
                 xhttp.open(action, "./proxy.php", true);
                 xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
                 xhttp.onreadystatechange = function() {
-                    if (xhttp.readyState == 4) {
-                        if (xhttp.status == 200) {
+                    if (xhttp.readyState === 4) {
+                        if (xhttp.status === 200) {
                             const respObj = JSON.parse(xhttp.responseText);
                             callback(respObj);
                         }

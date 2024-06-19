@@ -13,7 +13,7 @@
                 touch-action:none;
             }
         </style>
-        <script src="http://www.webglearth.com/v2/api.js"></script>
+        <script src="/webglearth.min.js"></script>
         <script type="text/javascript">
             let earth;
             let query = "";
@@ -32,7 +32,7 @@
                 let currCoordinates = [46.8011, 8.2266];
                 earth.setView(currCoordinates, 3);
                 const radius = 10000;
-                WE.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+                WE.tileLayer('https://api.maptiler.com/maps/streets-v2/{z}/{x}/{y}.png?key=YlQvLcNKq0a4aFDX2z3O',{
                     attribution: '© OpenStreetMap contributors'
                 }).addTo(earth);
 

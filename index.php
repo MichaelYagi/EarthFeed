@@ -208,7 +208,7 @@
     <body onload="initialize()">
         <div id="inputs">
             <form id="searchForm">
-                <input title="Search Query" type="text" id="query" name="query" value='restaurant'>
+                <input title="Search Query" type="text" id="query" name="query" value=''>
                 <input type="submit">
             </form>
         </div>

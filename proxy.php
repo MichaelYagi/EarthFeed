@@ -33,9 +33,9 @@ if (isset($_POST["engine"]) && $_POST["engine"] === "shashin" && isset($_POST["l
     $latitude = $_POST["latitude"];
     $longitude = $_POST["longitude"];
 
-    $baseUrl = "<shashin_url>";
+    $baseUrl = "<shashin_server_url>";
     $apiUrl = $baseUrl."/api/v1/mapdata";
-    $apiKey = "<api_key>";
+    $apiKey = "<shashin_api_key>";
 
     $opts = array(
         'http' => array(

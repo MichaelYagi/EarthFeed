@@ -22,13 +22,7 @@
 
             function setQuery(aQuery, currCoordinates, radius, earth, WE) {
                 query = aQuery;
-                for (const id in currMarkers) {
-                    if (currMarkers.hasOwnProperty(id)) {
-                        const marker = currMarkers[id];
-                        marker.removeFrom(earth);
-                    }
-                }
-                currMarkers = {};
+                clearMarkers(earth);
                 // getTweets(currCoordinates,radius,earth,WE);
                 getShashin(currCoordinates,radius,earth,WE);
             }
@@ -139,6 +133,8 @@
                     params += "&limit=" + limit + "&offset=" + offset;
                 }
 
+                clearMarkers(earth);
+
                 proxyRequest(params,"POST",function(response) {
                     console.log(response);
                     for(let i = 0; i < response.length; i++) {
@@ -225,6 +221,16 @@
                 ;
                 const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
                 return R * c;
+            }
+
+            function clearMarkers(earth) {
+                for (const id in currMarkers) {
+                    if (currMarkers.hasOwnProperty(id)) {
+                        const marker = currMarkers[id];
+                        marker.removeFrom(earth);
+                    }
+                }
+                currMarkers = {};
             }
         </script>
         <style>

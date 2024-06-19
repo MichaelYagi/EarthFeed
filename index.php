@@ -132,22 +132,28 @@
                         const metadata = response[i];
                         if (metadata["coordinates"] != null) {
                             const marker = WE.marker(metadata["coordinates"], metadata["mapMarkerUrl"], 30, 30);
-                            marker["id"] = metadata["id"];
-                            marker.addTo(earth);
-                            currMarkers[metadata["id"]] = marker;
-                            let markerContent = '<img src="'+metadata["thumbnailUrlSmall"]+'" height="100" "><br>';
-                            markerContent += metadata["date"]+"<br><br>";
-                            if (metadata["placeName"] !== null && metadata["placeName"].length > 0) {
-                                markerContent += metadata["placeName"]+"<br><br>";
-                            }
+                            if (false === currMarkers.hasOwnProperty(metadata["id"])) {
+                                marker["id"] = metadata["id"];
+                                marker.addTo(earth);
+                                currMarkers[metadata["id"]] = marker;
+                                let markerContent = '<img src="' + metadata["thumbnailUrlSmall"] + '" height="100" "><br>';
+                                markerContent += metadata["date"] + "<br><br>";
+                                if (metadata["placeName"] !== null && metadata["placeName"].length > 0) {
+                                    markerContent += metadata["placeName"] + "<br><br>";
+                                }
 
-                            if (metadata["videoUrl"].length > 0) {
-                                markerContent += "<a href='"+metadata["viewerUrl"]+"' target='_blank'>Video link</a>";
-                            } else {
-                                markerContent += "<a href='"+metadata["viewerUrl"]+"' target='_blank'>Image link</a>";
-                            }
+                                if (metadata["keywords"].length > 0) {
+                                    markerContent += "Keywords: " + metadata["keywords"] + "<br><br>";
+                                }
 
-                            marker.bindPopup(markerContent);
+                                if (metadata["videoUrl"].length > 0) {
+                                    markerContent += "<a href='" + metadata["viewerUrl"] + "' target='_blank'>Video link</a>";
+                                } else {
+                                    markerContent += "<a href='" + metadata["viewerUrl"] + "' target='_blank'>Image link</a>";
+                                }
+
+                                marker.bindPopup(markerContent);
+                            }
                         }
                     }
                 })
@@ -184,11 +190,9 @@
                 xhttp.open(action, "./proxy.php", true);
                 xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
                 xhttp.onreadystatechange = function() {
-                    if (xhttp.readyState === 4) {
-                        if (xhttp.status === 200) {
-                            const respObj = JSON.parse(xhttp.responseText);
-                            callback(respObj);
-                        }
+                    if (xhttp.readyState === 4 && xhttp.status === 200) {
+                        const respObj = JSON.parse(xhttp.responseText);
+                        callback(respObj);
                     }
                 };
                 xhttp.ontimeout = function () {
@@ -198,15 +202,15 @@
             }
 
             function getHaversine(lat1,lon1,lat2,lon2) {
-                var R = 6371; // Radius of the earth in km
-                var dLat = (lat2-lat1) * (Math.PI/180);  // deg2rad below
-                var dLon = (lon2-lon1) * (Math.PI/180);
-                var a =
-                        Math.sin(dLat/2) * Math.sin(dLat/2) +
-                        Math.cos(lat1* (Math.PI/180)) * Math.cos(lat2 * (Math.PI/180)) *
-                        Math.sin(dLon/2) * Math.sin(dLon/2)
-                    ;
-                var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+                const R = 6371; // Radius of the earth in km
+                const dLat = (lat2 - lat1) * (Math.PI / 180);  // deg2rad below
+                const dLon = (lon2 - lon1) * (Math.PI / 180);
+                const a =
+                    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                    Math.cos(lat1 * (Math.PI / 180)) * Math.cos(lat2 * (Math.PI / 180)) *
+                    Math.sin(dLon / 2) * Math.sin(dLon / 2)
+                ;
+                const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
                 return R * c;
             }
         </script>

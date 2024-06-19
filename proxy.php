@@ -27,6 +27,39 @@ function getCoordinates($location) {
     return $coordinates;
 }
 
+function callAPI($method, $url, $apiKey, $data = false) {
+    $curl = curl_init();
+
+    switch ($method) {
+        case "POST":
+            curl_setopt($curl, CURLOPT_POST, 1);
+
+            if ($data)
+                curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+            break;
+        case "PUT":
+            curl_setopt($curl, CURLOPT_PUT, 1);
+            break;
+        default:
+            if ($data)
+                $url = sprintf("%s?%s", $url, http_build_query($data));
+    }
+
+    // Optional Authentication:
+    curl_setopt($curl, CURLOPT_URL, $url);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($curl, CURLOPT_HTTPHEADER, array(
+        'X-Api-Key: ' . $apiKey,
+        'Content-Type: application/json;charset=UTF-8'
+    ));
+
+    $result = curl_exec($curl);
+
+    curl_close($curl);
+
+    return $result;
+}
+
 if (isset($_POST["engine"]) && $_POST["engine"] === "shashin" && isset($_POST["latitude"]) && $_POST["latitude"] !== "" && isset($_POST["longitude"]) && $_POST["longitude"] !== "" && isset($_POST["query"])) {
     $query = $_POST["query"];
 
@@ -34,47 +67,53 @@ if (isset($_POST["engine"]) && $_POST["engine"] === "shashin" && isset($_POST["l
     $longitude = $_POST["longitude"];
 
     $baseUrl = "<shashin_url>";
-    $apiUrl = $baseUrl."/api/v1/mapdata";
     $apiKey = "<shashin_api_key>";
+    $apiUrl = $baseUrl."/api/v1/mapdata/keywords/0/500";
 
-    $opts = array(
-        'http' => array(
-            'method' => 'GET',
-            'header' =>
-                'X-Api-Key: ' . $apiKey . "\r\n" .
-                'Content-Type: application/json;charset=UTF-8'
-        )
-    );
-
-    $context = stream_context_create($opts);
-    $json = file_get_contents($apiUrl, false, $context);
+    $json = callAPI("GET", $apiUrl, $apiKey);
     $result = json_decode($json, true);
     $processedResults = array();
 
-    if (array_key_exists("mapdata",$result)) {
-        $counter = 0;
-        $limit = 500;
+    if (array_key_exists("mapdata",$result) && array_key_exists("keywordMap",$result)) {
+        $keywordMap = $result["keywordMap"];
+
         foreach($result["mapdata"] as $metadata) {
-            if ((($metadata["placeName"] !== null && $metadata["placeName"] !== "" && $query !== "" && str_contains(strtolower($metadata["placeName"]), strtolower($query))) || $query === "") && $counter < $limit) {
-                $currStatus = array();
-                $currStatus["id"] = $metadata["id"];
-                $originalDate = $metadata["year"]."-".$metadata["month"]."-".$metadata["day"];;
-                $newDate = date("M d, Y", strtotime($originalDate));
-                $currStatus["date"] = $newDate;
-                $currStatus["placeName"] = $metadata["placeName"];
-                $currStatus["coordinates"] = [$metadata["lat"], $metadata["lng"]];
-                $currStatus["mapMarkerUrl"] = $baseUrl . $metadata["mapMarkerUrl"];
-                $currStatus["thumbnailUrlSmall"] = $baseUrl . $metadata["thumbnailUrlSmall"];
-                $currStatus["thumbnailUrlOriginal"] = $baseUrl . $metadata["thumbnailUrlOriginal"];
-                $currStatus["videoUrl"] = ($metadata["videoUrl"] !== null && $metadata["videoUrl"] !== "") ? $baseUrl . $metadata["videoUrl"] : "";
-                $currStatus["viewerUrl"] = ($metadata["videoUrl"] !== null && $metadata["videoUrl"] !== "") ? $baseUrl . "/video/" . $metadata["id"] . "/player" : $baseUrl . "/image/" . $metadata["id"] . "/viewer";
-                $processedResults[] = $currStatus;
+            $currStatus = array();
+            $currStatus["id"] = $metadata["id"];
+
+            // Get keywords
+            $keywords = "";
+            if (array_key_exists($metadata["id"], $keywordMap)) {
+                foreach ($keywordMap[$metadata["id"]] as $keyword) {
+                    $keywords .= $keyword . ", ";
+                }
+                $keywords = rtrim($keywords, ", ");
+
+                if ($keywords === "unidentified objects") {
+                    $keywords = "";
+                }
             }
 
-            if ($counter > $limit) {
-                break;
+            $placeName = $metadata["placeName"] === null ? "" : $metadata["placeName"];
+
+            if ($query !== "" &&
+                (!str_contains(strtolower($placeName), strtolower($query)) && !str_contains(strtolower($keywords), strtolower($query)))
+            ) {
+                continue;
             }
-            $counter++;
+
+            $originalDate = $metadata["year"]."-".$metadata["month"]."-".$metadata["day"];;
+            $newDate = date("M d, Y", strtotime($originalDate));
+            $currStatus["date"] = $newDate;
+            $currStatus["keywords"] = $keywords;
+            $currStatus["placeName"] = $metadata["placeName"];
+            $currStatus["coordinates"] = [$metadata["lat"], $metadata["lng"]];
+            $currStatus["mapMarkerUrl"] = $baseUrl . $metadata["mapMarkerUrl"];
+            $currStatus["thumbnailUrlSmall"] = $baseUrl . $metadata["thumbnailUrlSmall"];
+            $currStatus["thumbnailUrlOriginal"] = $baseUrl . $metadata["thumbnailUrlOriginal"];
+            $currStatus["videoUrl"] = ($metadata["videoUrl"] !== null && $metadata["videoUrl"] !== "") ? $baseUrl . $metadata["videoUrl"] : "";
+            $currStatus["viewerUrl"] = ($metadata["videoUrl"] !== null && $metadata["videoUrl"] !== "") ? $baseUrl . "/video/" . $metadata["id"] . "/player" : $baseUrl . "/image/" . $metadata["id"] . "/viewer";
+            $processedResults[] = $currStatus;
         }
     }
 

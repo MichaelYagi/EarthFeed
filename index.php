@@ -129,6 +129,12 @@
                 const urlParams = new URLSearchParams(window.location.search);
                 const offset = urlParams.get('offset');
                 const limit = urlParams.get('limit');
+                if (offset !== null) {
+                    params += "&offset=" + offset;
+                }
+                if (limit !== null) {
+                    params += "&limit=" + limit;
+                }
                 if (offset !== null && limit !== null) {
                     params += "&limit=" + limit + "&offset=" + offset;
                 }

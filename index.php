@@ -124,14 +124,15 @@
                             marker.addTo(earth);
                             currMarkers[metadata["id"]] = marker;
                             let markerContent = '<img src="'+metadata["mapMarkerUrl"]+'""><br>';
+                            markerContent += metadata["date"]+"<br><br>";
                             if (metadata["placeName"] !== null && metadata["placeName"].length > 0) {
-                                markerContent += metadata["placeName"];
+                                markerContent += metadata["placeName"]+"<br><br>";
                             }
 
                             if (metadata["videoUrl"].length > 0) {
-                                markerContent += "<br><a href='"+metadata["videoUrl"]+"' target='_blank'>Video link</a>";
+                                markerContent += "<a href='"+metadata["viewerUrl"]+"' target='_blank'>Video link</a>";
                             } else {
-                                markerContent += "<br><a href='"+metadata["thumbnailUrlOriginal"]+"' target='_blank'>Image link</a>";
+                                markerContent += "<a href='"+metadata["viewerUrl"]+"' target='_blank'>Image link</a>";
                             }
 
                             marker.bindPopup(markerContent);

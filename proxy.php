@@ -33,9 +33,9 @@ if (isset($_POST["engine"]) && $_POST["engine"] === "shashin" && isset($_POST["l
     $latitude = $_POST["latitude"];
     $longitude = $_POST["longitude"];
 
-    $baseUrl = "<shashin_base_url>";
+    $baseUrl = "<shashin_server>";
     $apiUrl = $baseUrl."/api/v1/mapdata";
-    $apiKey = "<shashin_api_key>";
+    $apiKey = "<api_key>";
 
     $opts = array(
         'http' => array(
@@ -56,12 +56,14 @@ if (isset($_POST["engine"]) && $_POST["engine"] === "shashin" && isset($_POST["l
             if (($metadata["placeName"] !== null && $metadata["placeName"] !== "" && $query !== "" && str_contains(strtolower($metadata["placeName"]), strtolower($query))) || $query === "") {
                 $currStatus = array();
                 $currStatus["id"] = $metadata["id"];
-                $currStatus["date"] = $metadata["year"] + $metadata["month"] + $metadata["day"];
+                $currStatus["date"] = $metadata["year"]."-".$metadata["month"]."-".$metadata["day"];
                 $currStatus["placeName"] = $metadata["placeName"];
                 $currStatus["coordinates"] = [$metadata["lat"], $metadata["lng"]];
                 $currStatus["mapMarkerUrl"] = $baseUrl . $metadata["mapMarkerUrl"];
                 $currStatus["thumbnailUrlSmall"] = $baseUrl . $metadata["thumbnailUrlSmall"];
+                $currStatus["thumbnailUrlOriginal"] = $baseUrl . $metadata["thumbnailUrlOriginal"];
                 $currStatus["videoUrl"] = ($metadata["videoUrl"] !== null && $metadata["videoUrl"] !== "") ? $baseUrl . $metadata["videoUrl"] : "";
+                $currStatus["viewerUrl"] = ($metadata["videoUrl"] !== null && $metadata["videoUrl"] !== "") ? $baseUrl . "/video/" . $metadata["id"] . "/player" : $baseUrl . "/image/" . $metadata["id"] . "/viewer";
                 $processedResults[] = $currStatus;
             }
         }

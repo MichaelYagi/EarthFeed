@@ -1,8 +1,20 @@
 <!DOCTYPE HTML>
 <html>
     <head>
+        <style>
+            #earth_div {
+                position:absolute !important;
+                top:0;
+                right:0;
+                bottom:0;
+                left:0;
+                background:#000 url(stars.jpg);
+                background-size:cover;
+                touch-action:none;
+            }
+        </style>
         <script src="http://www.webglearth.com/v2/api.js"></script>
-        <script>
+        <script type="text/javascript">
             let earth;
             let query = "";
             let currMarkers = {};

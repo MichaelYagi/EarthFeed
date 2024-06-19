@@ -33,7 +33,7 @@ if (isset($_POST["engine"]) && $_POST["engine"] === "shashin" && isset($_POST["l
     $latitude = $_POST["latitude"];
     $longitude = $_POST["longitude"];
 
-    $baseUrl = "<shashin_server_url>";
+    $baseUrl = "<shashin_url>";
     $apiUrl = $baseUrl."/api/v1/mapdata";
     $apiKey = "<shashin_api_key>";
 
@@ -58,7 +58,9 @@ if (isset($_POST["engine"]) && $_POST["engine"] === "shashin" && isset($_POST["l
             if ((($metadata["placeName"] !== null && $metadata["placeName"] !== "" && $query !== "" && str_contains(strtolower($metadata["placeName"]), strtolower($query))) || $query === "") && $counter < $limit) {
                 $currStatus = array();
                 $currStatus["id"] = $metadata["id"];
-                $currStatus["date"] = $metadata["year"]."-".$metadata["month"]."-".$metadata["day"];
+                $originalDate = $metadata["year"]."-".$metadata["month"]."-".$metadata["day"];;
+                $newDate = date("M d, Y", strtotime($originalDate));
+                $currStatus["date"] = $newDate;
                 $currStatus["placeName"] = $metadata["placeName"];
                 $currStatus["coordinates"] = [$metadata["lat"], $metadata["lng"]];
                 $currStatus["mapMarkerUrl"] = $baseUrl . $metadata["mapMarkerUrl"];

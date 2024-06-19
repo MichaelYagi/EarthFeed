@@ -33,7 +33,7 @@ if (isset($_POST["engine"]) && $_POST["engine"] === "shashin" && isset($_POST["l
     $latitude = $_POST["latitude"];
     $longitude = $_POST["longitude"];
 
-    $baseUrl = "<shashin_server>";
+    $baseUrl = "<shashin_url>";
     $apiUrl = $baseUrl."/api/v1/mapdata";
     $apiKey = "<api_key>";
 
@@ -52,8 +52,10 @@ if (isset($_POST["engine"]) && $_POST["engine"] === "shashin" && isset($_POST["l
     $processedResults = array();
 
     if (array_key_exists("mapdata",$result)) {
+        $counter = 0;
+        $limit = 500;
         foreach($result["mapdata"] as $metadata) {
-            if (($metadata["placeName"] !== null && $metadata["placeName"] !== "" && $query !== "" && str_contains(strtolower($metadata["placeName"]), strtolower($query))) || $query === "") {
+            if ((($metadata["placeName"] !== null && $metadata["placeName"] !== "" && $query !== "" && str_contains(strtolower($metadata["placeName"]), strtolower($query))) || $query === "") && $counter < $limit) {
                 $currStatus = array();
                 $currStatus["id"] = $metadata["id"];
                 $currStatus["date"] = $metadata["year"]."-".$metadata["month"]."-".$metadata["day"];
@@ -66,6 +68,11 @@ if (isset($_POST["engine"]) && $_POST["engine"] === "shashin" && isset($_POST["l
                 $currStatus["viewerUrl"] = ($metadata["videoUrl"] !== null && $metadata["videoUrl"] !== "") ? $baseUrl . "/video/" . $metadata["id"] . "/player" : $baseUrl . "/image/" . $metadata["id"] . "/viewer";
                 $processedResults[] = $currStatus;
             }
+
+            if ($counter > $limit) {
+                break;
+            }
+            $counter++;
         }
     }
 

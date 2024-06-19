@@ -124,7 +124,14 @@
             }
 
             function getShashin(coordinates, radius, earth, WE) {
-                const params = "engine=shashin" + "&query=" + query + "&latitude=" + coordinates[0] + "&longitude=" + coordinates[1];
+                let params = "engine=shashin" + "&query=" + query + "&latitude=" + coordinates[0] + "&longitude=" + coordinates[1];
+
+                const urlParams = new URLSearchParams(window.location.search);
+                const offset = urlParams.get('offset');
+                const limit = urlParams.get('limit');
+                if (offset !== null && limit !== null) {
+                    params += "&limit=" + limit + "&offset=" + offset;
+                }
 
                 proxyRequest(params,"POST",function(response) {
                     console.log(response);

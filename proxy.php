@@ -63,12 +63,20 @@ function callAPI($method, $url, $apiKey, $data = false) {
 if (isset($_POST["engine"]) && $_POST["engine"] === "shashin" && isset($_POST["latitude"]) && $_POST["latitude"] !== "" && isset($_POST["longitude"]) && $_POST["longitude"] !== "" && isset($_POST["query"])) {
     $query = $_POST["query"];
 
+    $limit = 500;
+    $offset = 0;
+
+    if (isset($_POST["offset"]) && isset($_POST["limit"])) {
+        $limit = $_POST["limit"];
+        $offset = $_POST["offset"];
+    }
+
     $latitude = $_POST["latitude"];
     $longitude = $_POST["longitude"];
 
     $baseUrl = "<shashin_url>";
     $apiKey = "<shashin_api_key>";
-    $apiUrl = $baseUrl."/api/v1/mapdata/keywords/0/500";
+    $apiUrl = $baseUrl."/api/v1/mapdata/keywords/".$offset."/".$limit;
 
     $json = callAPI("GET", $apiUrl, $apiKey);
     $result = json_decode($json, true);

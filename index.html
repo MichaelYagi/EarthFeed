@@ -229,6 +229,8 @@
                     if (xhttp.readyState === 4 && xhttp.status === 200) {
                         const respObj = JSON.parse(xhttp.responseText);
                         callback(respObj);
+                    } else {
+                        console.log("Error: "+xhttp.responseText);
                     }
                 };
                 xhttp.ontimeout = function () {

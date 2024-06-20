@@ -30,7 +30,7 @@
             function initialize() {
                 earth = new WE.map('earth_div',{
                     'atmosphere': true,
-                    'sky': true,
+                    'sky': false,
                     'position': [0, 0],
                     'panning': true,
                     'tilting': true,

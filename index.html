@@ -145,9 +145,9 @@
                             const metadata = mapdata[i];
 
                             if (metadata["lat"] != null && metadata["lng"] != null) {
-                                let marker = WE.marker([metadata["lat"], metadata["lng"]], baseUrl+metadata["mapMarkerUrl"], 30, 30);
-                                if (showMarkerImage === false) {
-                                    marker = WE.marker([metadata["lat"], metadata["lng"]], null, 25, 41);
+                                let marker = marker = WE.marker([metadata["lat"], metadata["lng"]], null, 25, 41);
+                                if (showMarkerImage === true) {
+                                    marker = WE.marker([metadata["lat"], metadata["lng"]], baseUrl+metadata["mapMarkerUrl"], 30, 30);
                                 }
                                 if (false === currMarkers.hasOwnProperty(metadata["id"])) {
                                     marker["id"] = metadata["id"];

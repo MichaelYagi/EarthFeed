@@ -39,7 +39,7 @@
                     'tilting': true,
                     'zooming': true
                 });
-                let currCoordinates = [46.8011, 8.2266];
+                let currCoordinates = [49.24966, -123.11934];
                 earth.setView(currCoordinates, 3);
                 const radius = 10000;
                 WE.tileLayer('https://api.maptiler.com/maps/streets-v2/{z}/{x}/{y}.png?key=YlQvLcNKq0a4aFDX2z3O',{
@@ -159,9 +159,25 @@
                                     
                                     markerContent += takenDate.toLocaleDateString('en-us', options) + "<br><br>";
                                     let placeNameStr = "";
+                                    let placeType = "";
+                                    let placeNameRaw = "";
                                     if (metadata["placeName"] !== null && metadata["placeName"].length > 0) {
                                         placeNameStr = metadata["placeName"];
-                                        markerContent += placeNameStr + "<br><br>";
+                                        placeNameRaw = placeNameStr;
+                                        const placeArr = placeNameStr.split(";");
+
+                                        if (placeArr.length > 1) {
+                                            placeNameStr = placeArr[0];
+                                            placeType = placeArr[1];
+                                        }
+
+                                        markerContent += placeNameStr;
+
+                                        if (placeType.length > 0) {
+                                            markerContent += "<br>" + placeType;
+                                        }
+
+                                        markerContent += "<br><br>";
                                     }
 
                                     let keywordListStr = "";
@@ -183,7 +199,7 @@
                                     }
 
                                     if (query !== "" &&
-                                        placeNameStr.toLowerCase().indexOf(query.toLowerCase()) === -1 &&
+                                        placeNameRaw.toLowerCase().indexOf(query.toLowerCase()) === -1 &&
                                         keywordListStr.toLowerCase().indexOf(query.toLowerCase()) === -1 &&
                                         markerContent.toLowerCase().indexOf(query.toLowerCase()) === -1 &&
                                         metadata["id"].toLowerCase().indexOf(query.toLowerCase()) === -1 &&

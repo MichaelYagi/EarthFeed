@@ -1,4 +1,6 @@
-Displays tagged trending twitter topics on a WebGL based earth API. Uses WebGL Earth (http://www.webglearth.org) and the Twitter API. 
-Type in a query and hit enter. Press spacebar to start or stop the rotation.
+This is an experimental toy. Use in conjunction with [Shashin](https://github.com/MichaelYagi/shashin). Displays photos uploaded to Shashin. Uses WebGL Earth (http://www.webglearth.org) and the Shashin API. 
+Type in a query to search for keywords and place names. Press spacebar to start or stop rotation.
 
-Edit proxy.php and replace <twiiter_api_consumer_key> with X API key and <twiiter_api_consumer_secret> with API secret key.
+Edit proxy.php and replace ```<shashin_url>``` with the Shashin base URL and ```<shashin_api_key>``` with a Shashin API key.
+
+<img src="https://michaelyagi.github.io/images/earthfeed2.png" alt="Earthfeed" width="500"/>

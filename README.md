@@ -3,4 +3,4 @@ Type in a query to search for keywords and place names. Press spacebar to start 
 
 Edit proxy.php and replace ```<shashin_url>``` with the Shashin base URL and ```<shashin_api_key>``` with a Shashin API key.
 
-<img src="https://michaelyagi.github.io/images/earthfeed.png" alt="drawing" width="500"/>
+<img src="https://michaelyagi.github.io/images/earthfeed2.png" alt="drawing" width="500"/>

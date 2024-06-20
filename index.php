@@ -15,22 +15,25 @@
         </style>
         <script src="/webglearth.min.js"></script>
         <script type="text/javascript">
+            const baseUrl = "<shashin_url>";
+            const apiKey = "<shashin_api_key>";
+
             let earth;
             let query = "";
             let currMarkers = {};
             let animateRequest;
+            let data = {};
 
             function setQuery(aQuery, currCoordinates, radius, earth, WE) {
                 query = aQuery;
                 clearMarkers(earth);
-                // getTweets(currCoordinates,radius,earth,WE);
                 getShashin(currCoordinates,radius,earth,WE);
             }
 
             function initialize() {
                 earth = new WE.map('earth_div',{
                     'atmosphere': true,
-                    'sky': false,
+                    'sky': true,
                     'position': [0, 0],
                     'panning': true,
                     'tilting': true,
@@ -85,26 +88,6 @@
                     }
                 }
 
-                // let startTime = new Date();
-                // let lastRounded = 0;
-                // let rounded = 0;
-                // let elapsedTargetMS = 15000;
-                // requestAnimationFrame(function animate(now) {
-                //     const c = earth.getPosition();
-                //     const elapsed = before ? now - before : 0;
-                //     before = now;
-                //     earth.setCenter([c[0], c[1] + 0.1*(elapsed/30)]);
-                //     let endTime = new Date();
-                //     let timeElapsed = endTime - startTime;
-                //     rounded = Math.round(timeElapsed/elapsedTargetMS)*elapsedTargetMS
-                //     if (rounded !== lastRounded) {
-                //         lastRounded = rounded;
-                //         getShashin(c,radius,earth,WE);
-                //     }
-                //
-                //     requestAnimationFrame(animate);
-                // });
-
                 start();
 
                 document.getElementById("searchForm").addEventListener("submit", function(event) {
@@ -125,86 +108,88 @@
             }
 
             function getShashin(coordinates, radius, earth, WE) {
-                let params = "engine=shashin" + "&query=" + query + "&latitude=" + coordinates[0] + "&longitude=" + coordinates[1];
-
                 const urlParams = new URLSearchParams(window.location.search);
-                const offset = urlParams.get('offset');
-                const limit = urlParams.get('limit');
-                if (offset !== null) {
-                    params += "&offset=" + offset;
+                let offset = urlParams.get('offset');
+                let limit = urlParams.get('limit');
+
+                if (offset === null) {
+                    offset = 0;
                 }
-                if (limit !== null) {
-                    params += "&limit=" + limit;
-                }
-                if (offset !== null && limit !== null) {
-                    params += "&limit=" + limit + "&offset=" + offset;
+                if (limit === null) {
+                    limit = 500;
                 }
 
                 clearMarkers(earth);
 
-                proxyRequest(params,"POST",function(response) {
+
+
+                const url = baseUrl+"/api/v1/mapdata/keywords/"+offset+"/"+limit
+
+                apiRequest(url,"GET",apiKey,null,function(response) {
                     console.log(response);
-                    for(let i = 0; i < response.length; i++) {
-                        const metadata = response[i];
-                        if (metadata["coordinates"] != null) {
-                            const marker = WE.marker(metadata["coordinates"], metadata["mapMarkerUrl"], 30, 30);
-                            if (false === currMarkers.hasOwnProperty(metadata["id"])) {
-                                marker["id"] = metadata["id"];
-                                marker.addTo(earth);
-                                currMarkers[metadata["id"]] = marker;
-                                let markerContent = '<img src="' + metadata["thumbnailUrlSmall"] + '" height="100" "><br>';
-                                markerContent += metadata["date"] + "<br><br>";
-                                if (metadata["placeName"] !== null && metadata["placeName"].length > 0) {
-                                    markerContent += metadata["placeName"] + "<br><br>";
-                                }
+                    data = response;
 
-                                if (metadata["keywords"].length > 0) {
-                                    markerContent += "Keywords: " + metadata["keywords"] + "<br><br>";
-                                }
+                    if (data.hasOwnProperty("mapdata") && data.hasOwnProperty("keywordMap")) {
+                        const mapdata = data["mapdata"];
+                        const keywordMap = data["keywordMap"];
 
-                                if (metadata["videoUrl"].length > 0) {
-                                    markerContent += "<a href='" + metadata["viewerUrl"] + "' target='_blank'>Video link</a>";
-                                } else {
-                                    markerContent += "<a href='" + metadata["viewerUrl"] + "' target='_blank'>Image link</a>";
-                                }
+                        for (let i = 0; i < mapdata.length; i++) {
+                            const metadata = mapdata[i];
 
-                                marker.bindPopup(markerContent);
+                            if (metadata["lat"] != null && metadata["lng"] != null) {
+                                const marker = WE.marker([metadata["lat"], metadata["lng"]], baseUrl+metadata["mapMarkerUrl"], 30, 30);
+                                if (false === currMarkers.hasOwnProperty(metadata["id"])) {
+                                    marker["id"] = metadata["id"];
+
+                                    currMarkers[metadata["id"]] = marker;
+                                    let markerContent = '<img src="' + baseUrl+metadata["thumbnailUrlSmall"] + '" height="100" "><br>';
+                                    markerContent += metadata["year"] + "-" + metadata["month"] + "-" + metadata["day"] + "<br><br>";
+                                    let placeNameStr = "";
+                                    if (metadata["placeName"] !== null && metadata["placeName"].length > 0) {
+                                        placeNameStr = metadata["placeName"];
+                                        markerContent += placeNameStr + "<br><br>";
+                                    }
+
+                                    let keywordListStr = "";
+                                    if (keywordMap.hasOwnProperty(metadata["id"])) {
+                                        const keywordList = keywordMap[metadata["id"]];
+                                        if (keywordList.length > 0) {
+                                            keywordListStr = keywordList.join(", ");
+                                            if (keywordListStr !== "unidentified objects") {
+                                                markerContent += "Keywords: " + keywordListStr + "<br><br>";
+                                            }
+                                        }
+                                    }
+
+                                    const viewerUrl = (metadata["videoUrl"] !== null && metadata["videoUrl"] !== "") ? baseUrl + "/video/" + metadata["id"] + "/player" : baseUrl + "/image/" + metadata["id"] + "/viewer";
+                                    if (metadata["videoUrl"] !== null && metadata["videoUrl"] !== "") {
+                                        markerContent += "<a href='" + viewerUrl + "' target='_blank'>Video link</a>";
+                                    } else {
+                                        markerContent += "<a href='" + viewerUrl + "' target='_blank'>Image link</a>";
+                                    }
+
+                                    if (query !== "" &&
+                                        placeNameStr.toLowerCase().indexOf(query.toLowerCase()) === -1 &&
+                                        keywordListStr.toLowerCase().indexOf(query.toLowerCase()) === -1
+                                    ) {
+                                        continue;
+                                    }
+
+                                    marker.addTo(earth);
+                                    marker.bindPopup(markerContent);
+                                }
                             }
                         }
                     }
-                })
+                });
             }
 
-            function getTweets(coordinates, radius, earth, WE) {
-                const lat = coordinates[0];
-                const lng = coordinates[1];
-                const params = "radius=" + radius + "&lat=" + lat + "&lng=" + lng + "&query=" + query;
-
-                proxyRequest(params,"POST",function(response) {
-                    for(let i=0; i<response.length; i++) {
-                        const tweet = response[i];
-                        if (tweet["coordinates"] != null) {
-                            const marker = WE.marker(tweet["coordinates"]);
-                            if (false === currMarkers.hasOwnProperty(tweet["id"])) {
-                                marker["tweetId"] = tweet["id"];
-                                marker.addTo(earth);
-                                currMarkers[tweet["id"]] = marker;
-                                let markerContent = tweet["user"].hasOwnProperty("profile_image_url") ?
-                                    '<img src="' + tweet["user"]["profile_image_url"] + '" height="25"><br>' : '';
-                                markerContent += "<a href='" + tweet["twitter_url"] + "' target='_blank'>" + tweet["user"]["screen_name"] + "</a>:<br>" + tweet["text"];
-                                marker.bindPopup(markerContent);
-                            }
-
-                        }
-                    }
-                })
-            }
-
-            function proxyRequest(params,action,callback) {
+            function apiRequest(url,action,apiKey,params,callback) {
                 const xhttp = new XMLHttpRequest();
                 xhttp.timeout = 5000; // time in milliseconds
-                xhttp.open(action, "./proxy.php", true);
-                xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                xhttp.open(action, url, true);
+                xhttp.setRequestHeader("Content-type", "application/json");
+                xhttp.setRequestHeader("X-Api-Key", apiKey);
                 xhttp.onreadystatechange = function() {
                     if (xhttp.readyState === 4 && xhttp.status === 200) {
                         const respObj = JSON.parse(xhttp.responseText);
@@ -214,7 +199,12 @@
                 xhttp.ontimeout = function () {
                     // Do nothing on timeout
                 };
-                xhttp.send(params);
+                if (params === null) {
+                    xhttp.send();
+                } else {
+                    xhttp.send(params);
+                }
+
             }
 
             function getHaversine(lat1,lon1,lat2,lon2) {

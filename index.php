@@ -28,7 +28,14 @@
             }
 
             function initialize() {
-                earth = new WE.map('earth_div');
+                earth = new WE.map('earth_div',{
+                    'atmosphere': true,
+                    'sky': true,
+                    'position': [0, 0],
+                    'panning': true,
+                    'tilting': true,
+                    'zooming': true
+                });
                 let currCoordinates = [46.8011, 8.2266];
                 earth.setView(currCoordinates, 3);
                 const radius = 10000;

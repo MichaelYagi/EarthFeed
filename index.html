@@ -143,7 +143,10 @@
 
                                     currMarkers[metadata["id"]] = marker;
                                     let markerContent = '<img src="' + baseUrl+metadata["thumbnailUrlSmall"] + '" height="100" "><br>';
-                                    markerContent += metadata["year"] + "-" + metadata["month"] + "-" + metadata["day"] + "<br><br>";
+                                    const takenDate = new Date(metadata["year"] + "-" + metadata["month"] + "-" + metadata["day"]);
+                                    const options = { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' };
+                                    
+                                    markerContent += takenDate.toLocaleDateString('en-us', options) + "<br><br>";
                                     let placeNameStr = "";
                                     if (metadata["placeName"] !== null && metadata["placeName"].length > 0) {
                                         placeNameStr = metadata["placeName"];
@@ -170,7 +173,8 @@
 
                                     if (query !== "" &&
                                         placeNameStr.toLowerCase().indexOf(query.toLowerCase()) === -1 &&
-                                        keywordListStr.toLowerCase().indexOf(query.toLowerCase()) === -1
+                                        keywordListStr.toLowerCase().indexOf(query.toLowerCase()) === -1 &&
+                                        markerContent.toLowerCase().indexOf(query.toLowerCase()) === -1
                                     ) {
                                         continue;
                                     }

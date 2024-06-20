@@ -111,6 +111,7 @@
                 const urlParams = new URLSearchParams(window.location.search);
                 let offset = urlParams.get('offset');
                 let limit = urlParams.get('limit');
+                let showMarkerImage = urlParams.get('marker');
 
                 if (offset === null) {
                     offset = 0;
@@ -118,10 +119,17 @@
                 if (limit === null) {
                     limit = 500;
                 }
+                if (showMarkerImage === null) {
+                    showMarkerImage = true;
+                } else if (showMarkerImage === 'false') {
+                    showMarkerImage = false;
+                } else if (showMarkerImage === 'true') {
+                    showMarkerImage = true;
+                } else {
+                    showMarkerImage = true;
+                }
 
                 clearMarkers(earth);
-
-
 
                 const url = baseUrl+"/api/v1/mapdata/keywords/"+offset+"/"+limit
 
@@ -137,7 +145,10 @@
                             const metadata = mapdata[i];
 
                             if (metadata["lat"] != null && metadata["lng"] != null) {
-                                const marker = WE.marker([metadata["lat"], metadata["lng"]], baseUrl+metadata["mapMarkerUrl"], 30, 30);
+                                let marker = WE.marker([metadata["lat"], metadata["lng"]], baseUrl+metadata["mapMarkerUrl"], 30, 30);
+                                if (showMarkerImage === false) {
+                                    marker = WE.marker([metadata["lat"], metadata["lng"]]);
+                                }
                                 if (false === currMarkers.hasOwnProperty(metadata["id"])) {
                                     marker["id"] = metadata["id"];
 

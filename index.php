@@ -15,8 +15,8 @@
         </style>
         <script src="/webglearth.min.js"></script>
         <script type="text/javascript">
-            const baseUrl = "https://shashin.ngrok.app";
-            const apiKey = "e456ff02-81ad-39e0-b3bb-a8b4802d8392";
+            const baseUrl = "<shashin_url>";
+            const apiKey = "<shashin_api_key>";
 
             let earth;
             let query = "";

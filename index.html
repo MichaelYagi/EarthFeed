@@ -159,7 +159,7 @@
                             if (metadata["lat"] != null && metadata["lng"] != null) {
                                 marker = null;
                                 if (showMarkerImage === true) {
-                                    marker = WE.marker([metadata["lat"], metadata["lng"]], baseUrl+metadata["mapMarkerUrl"].split(' ').join('%20'), 30, 30);
+                                    marker = WE.marker([metadata["lat"], metadata["lng"]], baseUrl+escape(metadata["mapMarkerUrl"]), 30, 30);
                                 } else {
                                     marker = WE.marker([metadata["lat"], metadata["lng"]], null, 25, 41);
                                 }
@@ -167,7 +167,7 @@
                                     marker["id"] = metadata["id"];
 
                                     currMarkers[metadata["id"]] = marker;
-                                    let markerContent = '<img src="' + baseUrl+metadata["thumbnailUrlSmall"] + '" height="100" "><br>';
+                                    let markerContent = '<img src="' + baseUrl+escape(metadata["thumbnailUrlSmall"]) + '" height="100" "><br>';
                                     const takenDate = new Date(metadata["year"] + "-" + metadata["month"] + "-" + metadata["day"]);
                                     const options = { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' };
                                     

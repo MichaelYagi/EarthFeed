@@ -50,13 +50,13 @@
                 }
 
                 let mapOptions = {
-                    attribution: '© OpenStreetMap contributors'
+                    attribution: '© OpenStreetMap contributors',
+                    tileSize: 512,
+                    zoomOffset: -1
                 };
                 let tile = "https://api.maptiler.com/maps/streets-v2/{z}/{x}/{y}.png?key=YlQvLcNKq0a4aFDX2z3O";
                 if (view === "satellite" || view === "sat") {
                     tile = "https://api.maptiler.com/maps/hybrid/256/{z}/{x}/{y}.jpg?key=YlQvLcNKq0a4aFDX2z3O"; //https://api.maptiler.com/maps/hybrid/{z}/{x}/{y}.jpg?key=YlQvLcNKq0a4aFDX2z3O
-                    mapOptions["tileSize"] = 512;
-                    mapOptions["zoomOffset"] = -1;
                 }
 
                 WE.tileLayer(tile, mapOptions).addTo(earth);

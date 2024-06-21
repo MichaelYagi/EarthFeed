@@ -112,7 +112,13 @@
                 let offset = urlParams.get('offset');
                 let limit = urlParams.get('limit');
                 let showMarkerImage = urlParams.get('marker');
+                let startDate = urlParams.get('start');
+                let endDate = urlParams.get('end');
 
+                if (startDate === null || startDate === "" || endDate === null || endDate === "") {
+                    startDate = "";
+                    endDate = "";
+                }                
                 if (offset === null) {
                     offset = 0;
                 }
@@ -131,9 +137,15 @@
 
                 clearMarkers(earth);
 
-                const url = baseUrl+"/api/v1/mapdata/keywords/"+offset+"/"+limit
+                const url = baseUrl+"/api/v1/mapdata/keywords";
+                const params = {
+                    offset:offset,
+                    limit:limit,
+                    startDate:startDate,
+                    endDate:endDate
+                };
 
-                apiRequest(url,"GET",apiKey,null,function(response) {
+                apiRequest(url,"POST",apiKey,JSON.stringify(params),function(response) {
                     console.log(response);
                     data = response;
 

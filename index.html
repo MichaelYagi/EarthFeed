@@ -56,14 +56,15 @@
                 };
                 let tile = "https://api.maptiler.com/maps/streets-v2/{z}/{x}/{y}.png?key=YlQvLcNKq0a4aFDX2z3O";
                 if (view === "satellite" || view === "sat") {
-                    tile = "https://api.maptiler.com/maps/hybrid/256/{z}/{x}/{y}.jpg?key=YlQvLcNKq0a4aFDX2z3O"; //https://api.maptiler.com/maps/hybrid/{z}/{x}/{y}.jpg?key=YlQvLcNKq0a4aFDX2z3O
+                    tile = "https://api.maptiler.com/maps/hybrid/256/{z}/{x}/{y}.jpg?key=YlQvLcNKq0a4aFDX2z3O"; //https://api.maptiler.com/maps/hybrid/{z}/{x}/{y}.jpg?key=YlQvLcNKq0a4aFDX2z3O    
                 }
 
                 WE.tileLayer(tile, mapOptions).addTo(earth);
 
-                // Start a simple rotation animation
-                let before = null;
-                let first = false;
+                getShashin();
+                const d = new Date();
+                let n = d.getMilliseconds();
+                let before = n;
 
                 function animate(now) {
                     // Array of lat/long
@@ -72,10 +73,8 @@
                     const elapsed = before ? now - before : 0;
                     before = now;
 
-                    if (false === first || getHaversine(c[0],c[1],currCoordinates[0],currCoordinates[1]) > 9000) {
-                        first = true;
+                    if (getHaversine(c[0],c[1],currCoordinates[0],currCoordinates[1]) > 9000) {
                         currCoordinates = c;
-                        // getTweets(c,radius,earth,WE);
                         getShashin(c,radius,earth,WE);
                     }
 
@@ -103,15 +102,13 @@
                     }
                 }
 
-                start();
-
                 document.getElementById("searchForm").addEventListener("submit", function(event) {
                     event.preventDefault();
                     setQuery(document.getElementById("query").value, currCoordinates, radius, earth, WE);
                 },false);
 
                 // Execute after clicking spacebar
-                document.body.onkeyup = function(e){
+                document.body.onkeyup = function(e) {
                     if(e.keyCode == 32){
                         if (animateRequest === undefined) {
                             start();
@@ -122,7 +119,7 @@
                 };
             }
 
-            function getShashin(coordinates, radius, earth, WE) {
+            function getShashin() {
                 const urlParams = new URLSearchParams(window.location.search);
                 let offset = urlParams.get('offset');
                 let limit = urlParams.get('limit');
@@ -256,6 +253,8 @@
                     if (xhttp.readyState === 4 && xhttp.status === 200) {
                         const respObj = JSON.parse(xhttp.responseText);
                         callback(respObj);
+                    } else {
+                        console.log("Error: "+xhttp.responseText)
                     }
                 };
                 xhttp.ontimeout = function () {

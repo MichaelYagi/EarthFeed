@@ -42,9 +42,24 @@
                 let currCoordinates = [49.24966, -123.11934];
                 earth.setView(currCoordinates, 3);
                 const radius = 10000;
-                WE.tileLayer('https://api.maptiler.com/maps/streets-v2/{z}/{x}/{y}.png?key=YlQvLcNKq0a4aFDX2z3O',{
+
+                const urlParams = new URLSearchParams(window.location.search);
+                let view = urlParams.get('view');
+                if (view === null || (view !== "street" && view !== "satellite" && view !== "sat")) {
+                    view = "street";
+                }
+
+                let mapOptions = {
                     attribution: '© OpenStreetMap contributors'
-                }).addTo(earth);
+                };
+                let tile = "https://api.maptiler.com/maps/streets-v2/{z}/{x}/{y}.png?key=YlQvLcNKq0a4aFDX2z3O";
+                if (view === "satellite" || view === "sat") {
+                    tile = "https://api.maptiler.com/maps/hybrid/256/{z}/{x}/{y}.jpg?key=YlQvLcNKq0a4aFDX2z3O"; //https://api.maptiler.com/maps/hybrid/{z}/{x}/{y}.jpg?key=YlQvLcNKq0a4aFDX2z3O
+                    mapOptions["tileSize"] = 512;
+                    mapOptions["zoomOffset"] = -1;
+                }
+
+                WE.tileLayer(tile, mapOptions).addTo(earth);
 
                 // Start a simple rotation animation
                 let before = null;

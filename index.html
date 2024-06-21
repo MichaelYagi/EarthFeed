@@ -167,7 +167,7 @@
                                     marker["id"] = metadata["id"];
 
                                     currMarkers[metadata["id"]] = marker;
-                                    let markerContent = '<img src="' + baseUrl+metadata["thumbnailUrlSmall"].split(' ').join('%20') + '" height="100" "><br>';
+                                    let markerContent = '<img src="' + baseUrl+metadata["thumbnailUrlSmall"] + '" height="100" "><br>';
                                     const takenDate = new Date(metadata["year"] + "-" + metadata["month"] + "-" + metadata["day"]);
                                     const options = { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' };
                                     

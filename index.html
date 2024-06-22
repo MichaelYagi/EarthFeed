@@ -107,6 +107,18 @@
                     setQuery(document.getElementById("query").value, currCoordinates, radius, earth, WE);
                 },false);
 
+                document.getElementById("rotateToggle").addEventListener("click", function(event) {
+                    event.preventDefault();
+
+                    if (animateRequest === undefined) {
+                        document.getElementById("rotateToggle").textContent = "Stop";
+                        start();
+                    } else {
+                        document.getElementById("rotateToggle").textContent = "Start";
+                        stop();
+                    }
+                },false);
+
                 // Execute after clicking spacebar
                 document.body.onkeyup = function(e) {
                     if(e.keyCode == 32){
@@ -303,6 +315,7 @@
             <form id="searchForm">
                 <input title="Search Query" type="text" id="query" name="query" value='' placeholder="Search images">
                 <input type="submit">
+                <button id="rotateToggle"><span id="rotateText">Start</span></button>
             </form>
         </div>
         <div id="earth_div"></div>

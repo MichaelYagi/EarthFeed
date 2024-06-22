@@ -3,4 +3,14 @@ Type in a query to search for keywords and place names. Press spacebar to start 
 
 Edit proxy.php and replace ```<shashin_url>``` with the Shashin base URL and ```<shashin_api_key>``` with a Shashin API key.
 
+Query parameters
+| Key | Value | Default | Description |
+|---|---|---|---|
+|```view```|```street\|sat```|```street```|Map views|
+|```marker```|```true\|false```|```true```|Map marker using photos if set to true|
+|```start```|```YYYY-MM-DD```|Default is to get the latest 500 results|Map start date, must be used with and set before or equal to ```end```. eg. ```2015-03-01```|
+|```end```|```YYYY-MM-DD```|Default is to get the latest 500 results|Map end date, must be used with and set after or equal to ```start```. eg. ```2015-03-30```|
+|```offset```|```numeric```|```0```|The number of results to skip before returning anything|
+|```limit```|```numeric```|```500```|The number of results returned|
+
 <img src="https://michaelyagi.github.io/images/earthfeed2.png" alt="Earthfeed" width="500"/>

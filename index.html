@@ -20,14 +20,11 @@
         </style>
         <script src="webglearth.min.js"></script>
         <script type="text/javascript">
-            const baseUrl = "<shashin_url>";
-            const apiKey = "<shashin_api_key>";
-
+            let data = {};
             let earth;
             let query = "";
             let currMarkers = {};
             let animateRequest;
-            let data = {};
 
             function setQuery(aQuery, currCoordinates, radius, earth, WE) {
                 query = aQuery;
@@ -145,11 +142,10 @@
                 let endDate = urlParams.get('end');
 
                 if (startDate === null || startDate === "" && (endDate !== null & endDate !== "")) {
-                    console.log("Error: An end date must be set");
+                    console.log("Warning: An end date was not set. Defaulting dates to empty string.");
                     startDate = "";
                     endDate = "";
                 } else if (endDate === null || endDate === "" && (startDate !== null & startDate !== "")) {
-                    console.log("Error: A start date must be set");
                     startDate = "";
                     endDate = "";
                 }
@@ -174,7 +170,6 @@
 
                 clearMarkers(earth);
 
-                const url = baseUrl+"/api/v1/mapdata/keywords";
                 const params = {
                     offset:offset,
                     limit:limit,
@@ -182,13 +177,14 @@
                     endDate:endDate
                 };
 
-                apiRequest(url,"POST",apiKey,JSON.stringify(params),function(response) {
+                apiRequest("proxy.php", "POST", params, function(response) {
                     console.log(response);
                     data = response;
 
-                    if (data.hasOwnProperty("mapdata") && data.hasOwnProperty("keywordMap")) {
+                    if (data.hasOwnProperty("mapdata") && data.hasOwnProperty("keywordMap") && data.hasOwnProperty("baseUrl")) {
                         const mapdata = data["mapdata"];
                         const keywordMap = data["keywordMap"];
+                        const baseUrl = data["baseUrl"];
 
                         for (let i = 0; i < mapdata.length; i++) {
                             const metadata = mapdata[i];
@@ -268,14 +264,14 @@
                 });
             }
 
-            function apiRequest(url,action,apiKey,params,callback) {
+            function apiRequest(url, action, params, callback) {
                 const xhttp = new XMLHttpRequest();
                 xhttp.timeout = 5000; // time in milliseconds
                 xhttp.open(action, url, true);
                 xhttp.setRequestHeader("Content-type", "application/json");
-                xhttp.setRequestHeader("X-Api-Key", apiKey);
                 xhttp.onreadystatechange = function() {
                     if (xhttp.readyState === 4 && xhttp.status === 200) {
+                        // console.log("Response: "+xhttp.responseText)
                         const respObj = JSON.parse(xhttp.responseText);
                         callback(respObj);
                     }
@@ -286,9 +282,8 @@
                 if (params === null) {
                     xhttp.send();
                 } else {
-                    xhttp.send(params);
+                    xhttp.send(JSON.stringify(params));
                 }
-
             }
 
             function getHaversine(lat1,lon1,lat2,lon2) {

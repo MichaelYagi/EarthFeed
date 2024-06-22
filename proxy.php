@@ -20,8 +20,6 @@ if (isset($params["offset"]) && isset($params["limit"]) && isset($params["startD
     $startDate = $params["startDate"];
     $endDate = $params["endDate"];
 
-    $baseUrl = "http://127.0.0.1:6624";
-    $apiKey = "feb7e867-f325-37ea-9198-77d5a790e268";
     $apiUrl = $baseUrl."/api/v1/mapdata/keywords";
 
     $data = [

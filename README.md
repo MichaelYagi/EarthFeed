@@ -13,6 +13,6 @@ Query parameters
 |```offset```|```numeric```|```0```|The number of results to skip before returning anything|
 |```limit```|```numeric```|```500```|The number of results returned|
 
-eg. ```index.html?start=2015-03-01&end=2015-03-30&marker=false```
+eg. ```index.html?start=2015-03-01&end=2015-03-30&limit=100```
 
 <img src="https://michaelyagi.github.io/images/earthfeed2.png" alt="Earthfeed" width="500"/>

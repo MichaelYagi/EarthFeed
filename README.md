@@ -3,6 +3,8 @@ Type in a query to search for keywords and place names. Press spacebar to start 
 
 Edit proxy.php and replace ```<shashin_url>``` and ```<shashin_api_key>``` with the Shashin base URL and Shashin API key respectively.
 
+Requires ```curl``` and ```openssl``` PHP extensions.
+
 Query parameters
 | Key | Value | Default | Description |
 |---|---|---|---|

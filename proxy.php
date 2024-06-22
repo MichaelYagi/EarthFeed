@@ -6,6 +6,7 @@
 
 $baseUrl = "<shashin_url>";
 $apiKey = "<shashin_api_key>";
+
 $data = file_get_contents('php://input');
 $params = [];
 
@@ -45,7 +46,7 @@ if (isset($params["offset"]) && isset($params["limit"]) && isset($params["startD
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
     $output = curl_exec($ch);
     if (curl_errno($ch)) {
-        echo 'Error:' . curl_error($ch);
+        echo '{"error":' . curl_error($ch) . "}";
     } else {
         $outPutMap = json_decode($output, true);
         // Add base URL in response

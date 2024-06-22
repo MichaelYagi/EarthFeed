@@ -260,6 +260,10 @@
                                 }
                             }
                         }
+                    } else if (data.hasOwnProperty("error")) {
+                        console.warn("Error: " + data["error"]);
+                    } else {
+                        console.warn("Error: Something went wrong!");
                     }
                 });
             }

@@ -6,7 +6,7 @@ Edit proxy.php and replace ```<shashin_url>``` with the Shashin base URL and ```
 Query parameters
 | Key | Value | Default | Description |
 |---|---|---|---|
-|```view```|```street\|sat```|```street```|Map views|
+|```view```|```street\|sat```|```street```|Street or satellite views|
 |```marker```|```true\|false```|```true```|Use image map markers if set to true|
 |```start```|```YYYY-MM-DD```|Default is to get the latest 500 results|Map start date, must be used with and set before or equal to ```end```. eg. ```2015-03-01```|
 |```end```|```YYYY-MM-DD```|Default is to get the latest 500 results|Map end date, must be used with and set after or equal to ```start```. eg. ```2015-03-30```|

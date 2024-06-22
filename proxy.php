@@ -46,7 +46,7 @@ if (isset($params["offset"]) && isset($params["limit"]) && isset($params["startD
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
     $output = curl_exec($ch);
     if (curl_errno($ch)) {
-        echo '{"error":' . curl_error($ch) . "}";
+        echo '{"error":"' . curl_error($ch) . '"}';
     } else {
         $outPutMap = json_decode($output, true);
         // Add base URL in response
@@ -54,6 +54,24 @@ if (isset($params["offset"]) && isset($params["limit"]) && isset($params["startD
         $json = json_encode($outPutMap);
         echo $json;
     }
+} else {
+    $missingParams = "";
+    if (!isset($params["offset"])) {
+        $missingParams .= "offset, ";
+    }
+    if (!isset($params["limit"])) {
+        $missingParams .= "limit, ";
+    }
+    if (!isset($params["startDate"])) {
+        $missingParams .= "startDate, ";
+    }
+    if (!isset($params["endDate"])) {
+        $missingParams .= "endDate, ";
+    }
+
+    $missingParams = substr($missingParams, 0, -2);
+
+    echo '{"error":"Required parameters missing: '.$missingParams.'"}';
 }
 
 exit();

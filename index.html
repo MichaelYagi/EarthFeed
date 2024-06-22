@@ -78,7 +78,7 @@
                         getShashin(c,radius,earth,WE);
                     }
 
-                    earth.setCenter([c[0], c[1] + 0.1*(elapsed/30)]);
+                    earth.setCenter([c[0], c[1] - 0.1*(elapsed/30)]);
                     animateRequest = requestAnimationFrame(animate);
                 }
 

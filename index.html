@@ -147,7 +147,11 @@
                 if (startDate === null || startDate === "" || endDate === null || endDate === "") {
                     startDate = "";
                     endDate = "";
-                }                
+                } else if (startDate === null || startDate === "" && (endDate !== null & endDate !== "")) {
+                    console.log("Error: An end date must be set");
+                } else if (endDate === null || endDate === "" && (startDate !== null & startDate !== "")) {
+                    console.log("Error: A start date must be set");
+                }
                 if (offset === null) {
                     offset = 0;
                 }

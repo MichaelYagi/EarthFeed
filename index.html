@@ -58,7 +58,7 @@
                 };
                 let tile = "https://api.maptiler.com/maps/streets-v2/{z}/{x}/{y}.png?key=YlQvLcNKq0a4aFDX2z3O";
                 if (view === "satellite" || view === "sat") {
-                    tile = "https://api.maptiler.com/maps/hybrid/256/{z}/{x}/{y}.jpg?key=YlQvLcNKq0a4aFDX2z3O"; //https://api.maptiler.com/maps/hybrid/{z}/{x}/{y}.jpg?key=YlQvLcNKq0a4aFDX2z3O    
+                    tile = "https://api.maptiler.com/maps/hybrid/256/{z}/{x}/{y}.jpg?key=YlQvLcNKq0a4aFDX2z3O"; //https://api.maptiler.com/maps/hybrid/{z}/{x}/{y}.jpg?key=YlQvLcNKq0a4aFDX2z3O
                 }
 
                 WE.tileLayer(tile, mapOptions).addTo(earth);
@@ -162,6 +162,7 @@
             }
 
             function getShashin() {
+                const messageEl = document.getElementById("message");
                 const urlParams = new URLSearchParams(window.location.search);
                 let offset = urlParams.get('offset');
                 let limit = urlParams.get('limit');
@@ -169,37 +170,42 @@
                 let startDate = urlParams.get('start');
                 let endDate = urlParams.get('end');
 
-                if (startDate === null || startDate === "" && (endDate !== null && endDate !== "")) {
+                if ((startDate === null || startDate === "") && (endDate === null || endDate === "")) {
+                    console.info("No dates set. Defaulting to latest 500 results.");
+                    // messageEl.value = "No dates set. Defaulting to latest 500 results.";
+                    startDate = "";
+                    endDate = "";
+                } else if (startDate === null || startDate === "" && (endDate !== null && endDate !== "")) {
                     console.warn("Warning: Start date missing. Defaulting dates to empty string.");
+                    messageEl.value = "Warning: Start date missing. Defaulting dates to empty string.";
                     startDate = "";
                     endDate = "";
                 } else if (endDate === null || endDate === "" && (startDate !== null && startDate !== "")) {
                     console.warn("Warning: End date missing. Defaulting dates to empty string.");
-                    startDate = "";
-                    endDate = "";
-                } else if (startDate === null || startDate === "" || endDate === null || endDate === "") {
-                    console.info("No dates set. Defaulting to latest 500 results.");
+                    messageEl.value = "Warning: End date missing. Defaulting dates to empty string.";
                     startDate = "";
                     endDate = "";
                 }
 
                 if (startDate !== "" && !isValidDate(startDate)) {
                     console.warn("Warning: Start date invalid.");
+                    messageEl.value = "Warning: Start date invalid.";
                     startDate = "";
                 }
                 if (endDate !== "" && !isValidDate(endDate)) {
                     console.warn("Warning: End date invalid.");
+                    messageEl.value = "Warning: End date invalid.";
                     endDate = "";
                 }
 
                 if (offset === null) {
                     offset = 0;
                 }
-                
+
                 if (limit === null) {
                     limit = 500;
                 }
-                
+
                 if (showMarkerImage === null) {
                     showMarkerImage = true;
                 } else if (showMarkerImage === 'false') {
@@ -232,7 +238,7 @@
                             const metadata = mapdata[i];
 
                             if (metadata["lat"] != null && metadata["lng"] != null) {
-                                marker = null;
+                                let marker = null;
                                 if (showMarkerImage === true) {
                                     marker = WE.marker([metadata["lat"], metadata["lng"]], baseUrl+escape(metadata["mapMarkerUrl"]), 30, 30);
                                 } else {
@@ -245,7 +251,7 @@
                                     let markerContent = '<img src="' + baseUrl+escape(metadata["thumbnailUrlSmall"]) + '" height="100" "><br>';
                                     const takenDate = new Date(metadata["year"] + "-" + metadata["month"] + "-" + metadata["day"]);
                                     const options = { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' };
-                                    
+
                                     markerContent += takenDate.toLocaleDateString('en-us', options) + "<br><br>";
                                     let placeNameStr = "";
                                     let placeType = "";
@@ -304,8 +310,10 @@
                         }
                     } else if (data.hasOwnProperty("error")) {
                         console.warn("Error: " + data["error"]);
+                        messageEl.value = "Error: " + data["error"];
                     } else {
                         console.warn("Error: Something went wrong!");
+                        messageEl.value = "Error: Something went wrong!";
                     }
                 });
             }
@@ -369,6 +377,7 @@
                 <input type="submit">
                 <button id="rotateToggle"><span id="rotateText">Start</span></button>
             </form>
+            <input type="text" value="" id="message" placeholder="Messages" readonly>
         </div>
         <div id="earth_div"></div>
     </body>

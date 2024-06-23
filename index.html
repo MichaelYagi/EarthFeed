@@ -134,7 +134,8 @@
 
             function isValidDate(dateString) {
                 // First check for the pattern
-                if(!/^\d{4}\-\d\d\-\d\d$/.test(dateString)) {
+                if(!/^\d{4}\-\d\d\-\d\d$/.test(dateString) && !/^\d{4}\-\d{1,2}\-\d{1,2}$/.test(dateString)
+                ) {
                     return false;
                 }
 
@@ -187,14 +188,23 @@
                 }
 
                 if (startDate !== "" && !isValidDate(startDate)) {
-                    console.warn("Warning: Start date invalid.");
+                    console.warn("Warning: Start date invalid. Must be format YYY-MM-DD.");
                     messageEl.value = "Warning: Start date invalid.";
                     startDate = "";
                 }
                 if (endDate !== "" && !isValidDate(endDate)) {
-                    console.warn("Warning: End date invalid.");
+                    console.warn("Warning: End date invalid. Must be format YYY-MM-DD.");
                     messageEl.value = "Warning: End date invalid.";
                     endDate = "";
+                }
+                if (startDate !== "" && endDate !== "") {
+                    const startDateObj = new Date(startDate);
+                    const endDateObj = new Date(endDate);
+
+                    if (startDateObj > endDateObj) {
+                        console.warn("Warning: Start date must not be greater than end date.");
+                        messageEl.value = "Warning: Start date must not be greater than end date.";
+                    }
                 }
 
                 if (offset === null) {

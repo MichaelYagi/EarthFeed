@@ -65,8 +65,7 @@
 
                 getShashin();
                 const d = new Date();
-                let n = d.getMilliseconds();
-                let before = n;
+                let before = d.getMilliseconds();
 
                 function animate(now) {
                     // Array of lat/long
@@ -123,7 +122,7 @@
 
                 // Execute after clicking spacebar
                 document.body.onkeyup = function(e) {
-                    if(e.keyCode == 32){
+                    if(e.code.toLowerCase() === "space"){
                         if (animateRequest === undefined) {
                             start();
                         } else {
@@ -226,7 +225,7 @@
                 };
 
                 apiRequest("proxy.php", "POST", params, function(response) {
-                    console.log(response);
+                    // console.log(response);
                     data = response;
 
                     if (data.hasOwnProperty("mapdata") && data.hasOwnProperty("keywordMap") && data.hasOwnProperty("baseUrl")) {

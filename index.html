@@ -233,6 +233,8 @@
                         const keywordMap = data["keywordMap"];
                         const baseUrl = data["baseUrl"];
 
+                        let resultCount = 0;
+
                         for (let i = 0; i < mapdata.length; i++) {
                             const metadata = mapdata[i];
 
@@ -302,10 +304,14 @@
                                         continue;
                                     }
 
+                                    resultCount++;
+
                                     marker.addTo(earth);
                                     marker.bindPopup(markerContent);
                                 }
                             }
+
+                            messageEl.value = resultCount + " result" + (resultCount === 1 ? "" : "s");
                         }
                     } else if (data.hasOwnProperty("error")) {
                         console.warn("Error: " + data["error"]);

@@ -151,12 +151,12 @@ function getShashin() {
         // showToast("Info", "No dates set. Defaulting to latest 500 results.");
         startDate = "";
         endDate = "";
-    } else if (startDate === null || startDate === "" && (endDate !== null && endDate !== "")) {
+    } else if ((startDate === null || startDate === "") && endDate !== null && endDate !== "") {
         console.warn("Warning: Start date missing. Defaulting dates to empty string.");
         showToast("Warning", "Start date missing. Defaulting to retrieve first 500 available results.", "#CC5500");
         startDate = "";
         endDate = "";
-    } else if (endDate === null || endDate === "" && (startDate !== null && startDate !== "")) {
+    } else if ((endDate === null || endDate === "") && startDate !== null && startDate !== "") {
         console.warn("Warning: End date missing. Defaulting dates to empty string.");
         showToast("Warning", "End date missing. Defaulting to retrieve first 500 available results.", "#CC5500");
         startDate = "";

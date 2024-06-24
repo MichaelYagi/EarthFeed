@@ -256,13 +256,7 @@ function getShashin() {
                                 placeType = placeArr[1];
                             }
 
-                            markerContent += placeNameStr;
-
-                            if (placeType.length > 0) {
-                                markerContent += "<br>" + placeType;
-                            }
-
-                            markerContent += "<br><br>";
+                            markerContent += placeNameStr + "<br><br>";
                         }
 
                         let keywordListStr = "";
@@ -271,7 +265,7 @@ function getShashin() {
                             if (keywordList.length > 0) {
                                 keywordListStr = keywordList.join(", ");
                                 if (keywordListStr !== "unidentified objects") {
-                                    markerContent += "Keywords: " + keywordListStr + "<br><br>";
+                                    markerContent += "Keywords: " + keywordListStr + ((placeType.length > 0) ? (", " + placeType) : "") + "<br><br>";
                                 }
                             }
                         }

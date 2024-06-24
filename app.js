@@ -153,24 +153,24 @@ function getShashin() {
         endDate = "";
     } else if (startDate === null || startDate === "" && (endDate !== null && endDate !== "")) {
         console.warn("Warning: Start date missing. Defaulting dates to empty string.");
-        showToast("Warning", "Start date missing. Defaulting to retrieving first 500 available results.", "#CC5500");
+        showToast("Warning", "Start date missing. Defaulting to retrieve first 500 available results.", "#CC5500");
         startDate = "";
         endDate = "";
     } else if (endDate === null || endDate === "" && (startDate !== null && startDate !== "")) {
         console.warn("Warning: End date missing. Defaulting dates to empty string.");
-        showToast("Warning", "End date missing. Defaulting to retrieving first 500 available results.", "#CC5500");
+        showToast("Warning", "End date missing. Defaulting to retrieve first 500 available results.", "#CC5500");
         startDate = "";
         endDate = "";
     }
 
     if (startDate !== "" && !isValidDate(startDate)) {
         console.warn("Warning: Start date invalid. Must be format YYY-MM-DD.");
-        showToast("Warning", "Start date invalid. Defaulting to retrieving first 500 available results.", "#CC5500");
+        showToast("Warning", "Start date invalid. Defaulting to retrieve first 500 available results.", "#CC5500");
         startDate = "";
     }
     if (endDate !== "" && !isValidDate(endDate)) {
         console.warn("Warning: End date invalid. Must be format YYY-MM-DD.");
-        showToast("Warning", "End date invalid. Defaulting to retrieving first 500 available results.", "#CC5500");
+        showToast("Warning", "End date invalid. Defaulting to retrieve first 500 available results.", "#CC5500");
         endDate = "";
     }
     if (startDate !== "" && endDate !== "") {
@@ -179,7 +179,7 @@ function getShashin() {
 
         if (startDateObj > endDateObj) {
             console.warn("Warning: Start date must not be greater than end date.");
-            showToast("Warning", "Start date must not be greater than end date. Defaulting to retrieving first 500 available results.", "#CC5500");
+            showToast("Warning", "Start date must not be greater than end date. Defaulting to retrieve first 500 available results.", "#CC5500");
         }
     }
 

@@ -3,6 +3,8 @@ let earth;
 let query = "";
 let currMarkers = {};
 let animateRequest;
+let showMarkerImage = true;
+const mapMarkerSize = 30;
 
 function setQuery(aQuery, currCoordinates, radius, earth, WE) {
     query = aQuery;
@@ -144,9 +146,9 @@ function getShashin() {
     const urlParams = new URLSearchParams(window.location.search);
     let offset = urlParams.get('offset');
     let limit = urlParams.get('limit');
-    let showMarkerImage = urlParams.get('marker');
     let startDate = urlParams.get('start');
     let endDate = urlParams.get('end');
+    showMarkerImage = urlParams.get('marker');
 
     if ((startDate === null || startDate === "") && (endDate === null || endDate === "")) {
         // showToast("Info", "No dates set. Defaulting to latest 500 results.");
@@ -228,7 +230,7 @@ function getShashin() {
                 if (metadata["lat"] != null && metadata["lng"] != null) {
                     let marker = null;
                     if (showMarkerImage === true) {
-                        marker = WE.marker([metadata["lat"], metadata["lng"]], baseUrl + escape(metadata["mapMarkerUrl"]), 45, 45);
+                        marker = WE.marker([metadata["lat"], metadata["lng"]], baseUrl + escape(metadata["mapMarkerUrl"]), mapMarkerSize, mapMarkerSize);
                     } else {
                         marker = WE.marker([metadata["lat"], metadata["lng"]], null, 25, 41);
                     }
@@ -427,10 +429,10 @@ function waitForElement(querySelector, timeout) {
     });
 }
 
-const observableEl = ".cesium-credit-text";
-const observableTimeout = 3000;
-waitForElement(observableEl, observableTimeout).then(function() {
-    let creditTextArray = document.getElementsByClassName("cesium-credit-text");
+let observableEl = "cesium-credit-text";
+let observableTimeout = 3000;
+waitForElement("."+observableEl, observableTimeout).then(function() {
+    let creditTextArray = document.getElementsByClassName(observableEl);
     for (const i in creditTextArray) {
         if (creditTextArray.hasOwnProperty(i)) {
             const creditTextArrayElement = creditTextArray[i];

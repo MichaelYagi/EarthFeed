@@ -228,7 +228,7 @@ function getShashin() {
                 if (metadata["lat"] != null && metadata["lng"] != null) {
                     let marker = null;
                     if (showMarkerImage === true) {
-                        marker = WE.marker([metadata["lat"], metadata["lng"]], baseUrl + escape(metadata["mapMarkerUrl"]), 30, 30);
+                        marker = WE.marker([metadata["lat"], metadata["lng"]], baseUrl + escape(metadata["mapMarkerUrl"]), 45, 45);
                     } else {
                         marker = WE.marker([metadata["lat"], metadata["lng"]], null, 25, 41);
                     }

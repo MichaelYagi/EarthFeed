@@ -19,6 +19,11 @@
                 background-size:cover;
                 touch-action:none;
             }
+            .cesium-credit-text a {
+                color: inherit;
+                text-decoration: inherit;
+                cursor: inherit;
+            }
         </style>
         <script src="webglearth.min.js"></script>
         <style>
@@ -70,11 +75,11 @@
             function setQuery(aQuery, currCoordinates, radius, earth, WE) {
                 query = aQuery;
                 clearMarkers(earth);
-                getShashin(currCoordinates,radius,earth,WE);
+                getShashin(currCoordinates, radius, earth, WE);
             }
 
             function initialize() {
-                earth = new WE.map('earth_div',{
+                earth = new WE.map('earth_div', {
                     'atmosphere': true,
                     'sky': false,
                     'position': [0, 0],
@@ -93,7 +98,7 @@
                 }
 
                 let mapOptions = {
-                    attribution: 'https://github.com/MichaelYagi/EarthFeed © MapTiler contributors',
+                    attribution: 'EarthFeed © MapTiler contributors',
                     tileSize: 512,
                     zoomOffset: -1
                 };
@@ -115,12 +120,12 @@
                     const elapsed = before ? now - before : 0;
                     before = now;
 
-                    if (getHaversine(c[0],c[1],currCoordinates[0],currCoordinates[1]) > 9000) {
+                    if (getHaversine(c[0], c[1], currCoordinates[0], currCoordinates[1]) > 9000) {
                         currCoordinates = c;
-                        getShashin(c,radius,earth,WE);
+                        getShashin(c, radius, earth, WE);
                     }
 
-                    earth.setCenter([c[0], c[1] - 0.1*(elapsed/30)]);
+                    earth.setCenter([c[0], c[1] - 0.1 * (elapsed / 30)]);
                     animateRequest = requestAnimationFrame(animate);
                 }
 
@@ -144,12 +149,12 @@
                     }
                 }
 
-                document.getElementById("searchForm").addEventListener("submit", function(event) {
+                document.getElementById("searchForm").addEventListener("submit", function (event) {
                     event.preventDefault();
                     setQuery(document.getElementById("query").value, currCoordinates, radius, earth, WE);
-                },false);
+                }, false);
 
-                document.getElementById("rotateToggle").addEventListener("click", function(event) {
+                document.getElementById("rotateToggle").addEventListener("click", function (event) {
                     event.preventDefault();
 
                     if (animateRequest === undefined) {
@@ -159,11 +164,11 @@
                         document.getElementById("rotateToggle").textContent = "Start";
                         stop();
                     }
-                },false);
+                }, false);
 
                 // Execute after clicking spacebar
-                document.body.onkeyup = function(e) {
-                    if(e.code.toLowerCase() === "space"){
+                document.body.onkeyup = function (e) {
+                    if (e.code.toLowerCase() === "space") {
                         if (animateRequest === undefined) {
                             start();
                         } else {
@@ -175,7 +180,7 @@
 
             function isValidDate(dateString) {
                 // First check for the pattern
-                if(!/^\d{4}\-\d\d\-\d\d$/.test(dateString) && !/^\d{4}\-\d{1,2}\-\d{1,2}$/.test(dateString)
+                if (!/^\d{4}\-\d\d\-\d\d$/.test(dateString) && !/^\d{4}\-\d{1,2}\-\d{1,2}$/.test(dateString)
                 ) {
                     return false;
                 }
@@ -267,13 +272,13 @@
                 clearMarkers(earth);
 
                 const params = {
-                    offset:offset,
-                    limit:limit,
-                    startDate:startDate,
-                    endDate:endDate
+                    offset: offset,
+                    limit: limit,
+                    startDate: startDate,
+                    endDate: endDate
                 };
 
-                apiRequest("proxy.php", "POST", params, function(response) {
+                apiRequest("proxy.php", "POST", params, function (response) {
                     // console.log(response);
                     data = response;
 
@@ -290,7 +295,7 @@
                             if (metadata["lat"] != null && metadata["lng"] != null) {
                                 let marker = null;
                                 if (showMarkerImage === true) {
-                                    marker = WE.marker([metadata["lat"], metadata["lng"]], baseUrl+escape(metadata["mapMarkerUrl"]), 30, 30);
+                                    marker = WE.marker([metadata["lat"], metadata["lng"]], baseUrl + escape(metadata["mapMarkerUrl"]), 30, 30);
                                 } else {
                                     marker = WE.marker([metadata["lat"], metadata["lng"]], null, 25, 41);
                                 }
@@ -298,9 +303,9 @@
                                     marker["id"] = metadata["id"];
 
                                     currMarkers[metadata["id"]] = marker;
-                                    let markerContent = '<img src="' + baseUrl+escape(metadata["thumbnailUrlSmall"]) + '" height="100" "><br>';
+                                    let markerContent = '<img src="' + baseUrl + escape(metadata["thumbnailUrlSmall"]) + '" height="100" "><br>';
                                     const takenDate = new Date(metadata["year"] + "-" + metadata["month"] + "-" + metadata["day"]);
-                                    const options = { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' };
+                                    const options = {weekday: 'long', year: 'numeric', month: 'short', day: 'numeric'};
 
                                     markerContent += takenDate.toLocaleDateString('en-us', options) + "<br><br>";
                                     let placeNameStr = "";
@@ -381,7 +386,7 @@
                 xhttp.timeout = 5000; // time in milliseconds
                 xhttp.open(action, url, true);
                 xhttp.setRequestHeader("Content-type", "application/json");
-                xhttp.onreadystatechange = function() {
+                xhttp.onreadystatechange = function () {
                     if (xhttp.readyState === 4 && xhttp.status === 200) {
                         // console.log("Response: "+xhttp.responseText)
                         const respObj = JSON.parse(xhttp.responseText);
@@ -398,7 +403,7 @@
                 }
             }
 
-            function getHaversine(lat1,lon1,lat2,lon2) {
+            function getHaversine(lat1, lon1, lat2, lon2) {
                 const R = 6371; // Radius of the earth in km
                 const dLat = (lat2 - lat1) * (Math.PI / 180);  // deg2rad below
                 const dLon = (lon2 - lon1) * (Math.PI / 180);
@@ -446,16 +451,28 @@
 
             const toastEl = document.getElementById("webglEarthToast");
             toastEl.addEventListener('hidden.bs.toast', () => {
-                document.getElementById("webglEarthColour").setAttribute("fill","");
+                document.getElementById("webglEarthColour").setAttribute("fill", "");
                 document.getElementById("webglEarthTitle").innerHTML = "";
                 document.getElementById("webglEarthMessage").innerHTML = "";
             });
             const toastEl1 = document.getElementById("webglEarthToast1");
             toastEl1.addEventListener('hidden.bs.toast', () => {
-                document.getElementById("webglEarthColour1").setAttribute("fill","");
+                document.getElementById("webglEarthColour1").setAttribute("fill", "");
                 document.getElementById("webglEarthTitle1").innerHTML = "";
                 document.getElementById("webglEarthMessage1").innerHTML = "";
             });
+
+            setTimeout(function () {
+                let creditTextArray = document.getElementsByClassName("cesium-credit-text");
+                for (const i in creditTextArray) {
+                    if (creditTextArray.hasOwnProperty(i)) {
+                        const creditTextArrayElement = creditTextArray[i];
+                        creditTextArrayElement.innerHTML = creditTextArrayElement.innerText
+                            .replace("EarthFeed", "<a href='https://github.com/MichaelYagi/EarthFeed' target='_blank'>EarthFeed</a>")
+                            .replace("MapTiler", "<a href='https://www.maptiler.com/' target='_blank'>MapTiler</a>");
+                    }
+                }
+            }, 1000)
         </script>
     </body>
 </html>

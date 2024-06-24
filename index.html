@@ -53,7 +53,7 @@
         </div>
         <div id="inputs">
             <form id="searchForm">
-                <input title="Search Query" type="text" id="query" name="query" value='' placeholder="Search images">
+                <input title="Search Query" type="search" id="query" name="query" value='' placeholder="Search images">
                 <input type="submit">
                 <button id="rotateToggle"><span id="rotateText">Start</span></button>
             </form>
@@ -361,7 +361,11 @@
                             }
                         }
 
-                        showToast("Results Returned", (resultCount + " result" + (resultCount === 1 ? "" : "s") + " returned."), null, "webglEarthToast1");
+                        let toastTitle = "Results Returned";
+                        if (resultCount === 0) {
+                            toastTitle = "No Results";
+                        }
+                        showToast(toastTitle, (resultCount + " result" + (resultCount === 1 ? "" : "s") + " returned."), null, "webglEarthToast1");
                     } else if (data.hasOwnProperty("error")) {
                         console.warn("Error: " + data["error"]);
                         showToast("Error", data["error"], "#FF0000");

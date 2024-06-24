@@ -5,6 +5,9 @@ let currMarkers = {};
 let animateRequest;
 let showMarkerImage = true;
 const mapMarkerSize = 30;
+document.getElementById("rotateToggle").disabled = true;
+document.getElementById("submit").disabled = true;
+document.getElementById("query").disabled = true;
 
 function setQuery(aQuery, currCoordinates, radius, earth, WE) {
     query = aQuery;
@@ -143,6 +146,10 @@ function isValidDate(dateString) {
 }
 
 function getShashin() {
+    document.getElementById("rotateToggle").disabled = true;
+    document.getElementById("submit").disabled = true;
+    document.getElementById("query").disabled = true;
+
     const urlParams = new URLSearchParams(window.location.search);
     let offset = urlParams.get('offset');
     let limit = urlParams.get('limit');
@@ -305,6 +312,7 @@ function getShashin() {
             if (resultCount === 0) {
                 toastTitle = "No Results";
             }
+
             showToast(toastTitle, (resultCount + " result" + (resultCount === 1 ? "" : "s") + " returned."), null, "webglEarthToast1");
         } else if (data.hasOwnProperty("error")) {
             console.warn("Error: " + data["error"]);
@@ -313,6 +321,10 @@ function getShashin() {
             console.warn("Error: Something went wrong!", "#FF0000");
             showToast("Error", "Something went wrong!");
         }
+
+        document.getElementById("rotateToggle").disabled = false;
+        document.getElementById("submit").disabled = false;
+        document.getElementById("query").disabled = false;
     });
 }
 

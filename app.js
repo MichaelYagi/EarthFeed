@@ -330,7 +330,7 @@ function getShashin() {
 
 function apiRequest(url, action, params, callback) {
     const xhttp = new XMLHttpRequest();
-    xhttp.timeout = 5000; // time in milliseconds
+    xhttp.timeout = 10000; // time in milliseconds
     xhttp.open(action, url, true);
     xhttp.setRequestHeader("Content-type", "application/json");
     xhttp.onreadystatechange = function () {
@@ -341,7 +341,7 @@ function apiRequest(url, action, params, callback) {
         }
     };
     xhttp.ontimeout = function () {
-        showToast("Error", "Timed out.", "#FF0000");
+        showToast("Error", "Request to "+url+" timed out.", "#FF0000");
     };
     if (params === null) {
         xhttp.send();

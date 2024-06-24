@@ -462,7 +462,41 @@
                 document.getElementById("webglEarthMessage1").innerHTML = "";
             });
 
-            setTimeout(function () {
+            function waitForElement(querySelector, timeout){
+                return new Promise((resolve, reject) => {
+                    let timer = null;
+
+                    if (document.querySelectorAll(querySelector).length) {
+                        return resolve();
+                    }
+
+                    const observer = new MutationObserver(() => {
+                        if (document.querySelectorAll(querySelector).length) {
+                            observer.disconnect();
+                            if (timer !== null) {
+                                clearTimeout(timer);
+                            }
+                            return resolve();
+                        }
+                    });
+
+                    observer.observe(document.body, {
+                        childList: true,
+                        subtree: true
+                    });
+
+                    if (timeout) {
+                        timer = setTimeout(() => {
+                            observer.disconnect();
+                            reject();
+                        }, timeout);
+                    }
+                });
+            }
+
+            const observableEl = ".cesium-credit-text";
+            const observableTimeout = 3000;
+            waitForElement(observableEl, observableTimeout).then(function() {
                 let creditTextArray = document.getElementsByClassName("cesium-credit-text");
                 for (const i in creditTextArray) {
                     if (creditTextArray.hasOwnProperty(i)) {
@@ -472,7 +506,9 @@
                             .replace("MapTiler", "<a href='https://www.maptiler.com/' target='_blank'>MapTiler</a>");
                     }
                 }
-            }, 1000)
+            }).catch(() => {
+                console.log(observableEl + " element did not load in " + (observableTimeout/1000) + " seconds");
+            });
         </script>
     </body>
 </html>

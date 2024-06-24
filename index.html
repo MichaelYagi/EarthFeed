@@ -361,7 +361,7 @@
                             }
                         }
 
-                        showToast("Results", (resultCount + " result" + (resultCount === 1 ? "" : "s")), null, "webglEarthToast1");
+                        showToast("Results Returned", (resultCount + " result" + (resultCount === 1 ? "" : "s") + " returned."), null, "webglEarthToast1");
                     } else if (data.hasOwnProperty("error")) {
                         console.warn("Error: " + data["error"]);
                         showToast("Error", data["error"], "#FF0000");
@@ -385,7 +385,7 @@
                     }
                 };
                 xhttp.ontimeout = function () {
-                    // Do nothing on timeout
+                    showToast("Error", "Timed out.", "#FF0000");
                 };
                 if (params === null) {
                     xhttp.send();

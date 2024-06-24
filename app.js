@@ -7,7 +7,7 @@ let animateRequest;
 function setQuery(aQuery, currCoordinates, radius, earth, WE) {
     query = aQuery;
     clearMarkers(earth);
-    getShashin(currCoordinates, radius, earth, WE);
+    getShashin();
 }
 
 function initialize() {
@@ -54,7 +54,6 @@ function initialize() {
 
         if (getHaversine(c[0], c[1], currCoordinates[0], currCoordinates[1]) > 9000) {
             currCoordinates = c;
-            getShashin(c, radius, earth, WE);
         }
 
         earth.setCenter([c[0], c[1] - 0.1 * (elapsed / 30)]);
@@ -102,8 +101,10 @@ function initialize() {
     document.body.onkeyup = function (e) {
         if (e.code.toLowerCase() === "space") {
             if (animateRequest === undefined) {
+                document.getElementById("rotateToggle").textContent = "Stop";
                 start();
             } else {
+                document.getElementById("rotateToggle").textContent = "Start";
                 stop();
             }
         }

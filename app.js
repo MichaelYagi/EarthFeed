@@ -316,10 +316,10 @@ function getShashin() {
             showToast(toastTitle, (resultCount + " result" + (resultCount === 1 ? "" : "s") + " returned."), null, "webglEarthToast1");
         } else if (data.hasOwnProperty("error")) {
             console.warn("Error: " + data["error"]);
-            showToast("Error", data["error"], "#FF0000");
+            showToast("Error", "Error retrieving results: " + data["error"], "#FF0000");
         } else {
             console.warn("Error: Something went wrong!", "#FF0000");
-            showToast("Error", "Something went wrong!");
+            showToast("Error", "Something went wrong retrieving results!");
         }
 
         document.getElementById("rotateToggle").disabled = false;
@@ -329,6 +329,8 @@ function getShashin() {
 }
 
 function apiRequest(url, action, params, callback) {
+    showToast("Loading data", "Loading data", null, "webglEarthToast1");
+
     const xhttp = new XMLHttpRequest();
     xhttp.timeout = 10000; // time in milliseconds
     xhttp.open(action, url, true);

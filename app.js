@@ -267,7 +267,7 @@ function getShashin() {
                                 if (keywordListStr !== "unidentified objects") {
                                     markerContent += "Keywords: " + keywordListStr + ((placeType.length > 0) ? (", " + placeType) : "") + "<br><br>";
                                 } else if (placeType.length > 0) {
-                                    markerContent += "Keywords: " + ((placeType.length > 0) ? (", " + placeType) : "") + "<br><br>";
+                                    markerContent += "Keywords: " + placeType + "<br><br>";
                                 }
                             }
                         }

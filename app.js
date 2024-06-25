@@ -229,7 +229,7 @@ function getShashin() {
 
     const popover = bootstrap.Popover.getOrCreateInstance('#infoPopover') // Returns a Bootstrap popover instance
     popover.setContent({
-        '.popover-header': 'Query Param Values',
+        '.popover-header': 'Parameter Values',
         '.popover-body': popoverBody
     });
 

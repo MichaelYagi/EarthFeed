@@ -220,6 +220,19 @@ function getShashin() {
         endDate: endDate
     };
 
+    const popoverBody = '<strong>view</strong>: ' + (urlParams.get('view') === null ? "street" : urlParams.get('view')) + "<br>" +
+        '<strong>marker</strong>: ' + (showMarkerImage === true ? "true" : "false") + "<br>" +
+        '<strong>offset</strong>: ' + offset + "<br>" +
+        '<strong>limit</strong>: ' + limit + "<br>" +
+        '<strong>start</strong>: ' + startDate + "<br>" +
+        '<strong>end</strong>: ' + endDate;
+
+    const popover = bootstrap.Popover.getOrCreateInstance('#infoPopover') // Returns a Bootstrap popover instance
+    popover.setContent({
+        '.popover-header': 'Query Param Values',
+        '.popover-body': popoverBody
+    });
+
     apiRequest("proxy.php", "POST", params, function (response) {
         // console.log(response);
         data = response;
@@ -397,6 +410,11 @@ function showToast(title, message, colour, target) {
     const toast = new bootstrap.Toast(toastEl);
     toast.show();
 }
+
+const popoverTrigger = document.getElementById("infoPopover");
+new bootstrap.Popover(popoverTrigger, {
+    html: true
+});
 
 const toastEl = document.getElementById("webglEarthToast");
 toastEl.addEventListener('hidden.bs.toast', () => {

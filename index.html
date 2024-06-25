@@ -22,6 +22,9 @@
                 background-size:cover;
                 touch-action:none;
             }
+            #searchForm a {
+                text-decoration: none;
+            }
         </style>
         <title>EarthFeed</title>
     </head>
@@ -43,7 +46,6 @@
                         <rect width="100%" height="100%" fill="" id="webglEarthColour1"></rect>
                     </svg>
                     <strong class="me-auto" id="webglEarthTitle1"></strong>
-                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
                 </div>
                 <div class="toast-body" id="webglEarthMessage1"></div>
             </div>
@@ -53,6 +55,7 @@
                 <input title="Search" type="search" id="query" name="query" value='' placeholder="Search">
                 <input type="submit" id="submit">
                 <button id="rotateToggle"><span id="rotateText">Start</span></button>
+                <a class="ms-1" style="color: #0d6efd" id="infoPopover" data-bs-toggle="popover" data-bs-title="Parameters" data-bs-content="Query Params">&#128712;</a>
             </form>
         </div>
         <div id="earth_div"></div>

@@ -25,10 +25,17 @@ function initialize() {
         'zooming': true
     });
     let currCoordinates = [49.24966, -123.11934];
+
+    const urlParams = new URLSearchParams(window.location.search);
+    let lat = parseFloat(urlParams.get('lat'));
+    let lng = parseFloat(urlParams.get('lng'));
+    if (isNaN(lat) === false && isNaN(lng) === false) {
+        currCoordinates = [lat, lng];
+    }
+
     earth.setView(currCoordinates, 3);
     const radius = 10000;
 
-    const urlParams = new URLSearchParams(window.location.search);
     let view = urlParams.get('view');
     if (view === null || (view !== "street" && view !== "satellite" && view !== "sat")) {
         view = "street";
@@ -155,6 +162,13 @@ function getShashin() {
     let limit = urlParams.get('limit');
     let startDate = urlParams.get('start');
     let endDate = urlParams.get('end');
+    let lat = urlParams.get('lat');
+    let lng = urlParams.get('lng');
+    if (lat === null || lng === null) {
+         lat = "";
+         lng = "";
+    }
+
     showMarkerImage = urlParams.get('marker');
 
     if ((startDate === null || startDate === "") && (endDate === null || endDate === "")) {
@@ -225,7 +239,9 @@ function getShashin() {
         '<strong>offset</strong>: ' + offset + "<br>" +
         '<strong>limit</strong>: ' + limit + "<br>" +
         '<strong>start</strong>: ' + startDate + "<br>" +
-        '<strong>end</strong>: ' + endDate;
+        '<strong>end</strong>: ' + endDate + "<br>" +
+        '<strong>lat</strong>: ' + lat + "<br>" +
+        '<strong>lng</strong>: ' + lng;
 
     const popover = bootstrap.Popover.getOrCreateInstance('#infoPopover') // Returns a Bootstrap popover instance
     popover.setContent({

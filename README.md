@@ -1,7 +1,7 @@
 This is an experimental toy. Use in conjunction with [Shashin](https://github.com/MichaelYagi/shashin). Display photos uploaded to Shashin. Uses WebGL Earth (http://www.webglearth.org) and the Shashin API. 
 Type in a query to search for keywords and place names. Press spacebar to start or stop rotation.
 
-Edit proxy.php and replace ```<shashin_url>``` and ```<shashin_api_key>``` with the Shashin base URL and Shashin API key respectively.
+Edit config.php and replace ```<shashin_url>``` and ```<shashin_api_key>``` with the Shashin base URL and Shashin API key respectively.
 
 Requires ```curl``` and ```openssl``` PHP extensions.
 

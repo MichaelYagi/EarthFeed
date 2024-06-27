@@ -2,5 +2,5 @@
 
 return array(
     'shashinUrl' => '<shashin_url>',
-    'shashinApiKey' => '<shashin_api_key>',
+    'shashinApiKey' => '<shashin_api_key>'
 );

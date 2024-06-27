@@ -4,8 +4,7 @@
  * Makes requests to Shashin API
 */
 
-$baseUrl = "<shashin_url>";
-$apiKey = "<shashin_api_key>";
+$configs = include('config.php');
 
 $data = file_get_contents('php://input');
 $params = [];
@@ -14,12 +13,14 @@ if (!empty($data)) {
     $params = json_decode($data, true);
 }
 
-if (isset($params["offset"]) && isset($params["limit"]) && isset($params["startDate"]) && isset($params["endDate"])) {
+if (isset($params["offset"]) && isset($params["limit"]) && isset($params["startDate"]) && isset($params["endDate"]) && isset($configs["shashinUrl"]) && isset($configs["shashinApiKey"])) {
 
     $offset = $params["offset"];
     $limit = $params["limit"];
     $startDate = $params["startDate"];
     $endDate = $params["endDate"];
+    $baseUrl = $configs["shashinUrl"];
+    $apiKey = $configs["shashinApiKey"];
 
     $apiUrl = $baseUrl."/api/v1/mapdata/keywords";
 

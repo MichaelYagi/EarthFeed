@@ -6,7 +6,7 @@ Edit config.php and replace ```<shashin_url>``` and ```<shashin_api_key>``` with
 Requires ```curl``` and ```openssl``` PHP extensions.
 
 Query parameters
-| Key | <div style="width:300px">Value</div> | Default | Description |
+| Key | <div style="width:400px">Value</div> | Default | Description |
 |---|---|---|---|
 |```view```|```street\|sat```|```street```|Street or satellite view|
 |```marker```|```boolean```|```true```|Use image map markers if set to true|

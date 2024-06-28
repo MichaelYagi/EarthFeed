@@ -24,16 +24,22 @@ function initialize() {
         'tilting': true,
         'zooming': true
     });
-    let currCoordinates = [49.24966, -123.11934];
+    let currCoordinates = [49.169087251026724, -123.1464338053518];
 
     const urlParams = new URLSearchParams(window.location.search);
-    let lat = parseFloat(urlParams.get('lat'));
-    let lng = parseFloat(urlParams.get('lng'));
-    if (isNaN(lat) === false && isNaN(lng) === false) {
+    let latlng = urlParams.get('latlng');
+    let latlngArray = latlng === null ? [] : latlng.split(",");
+
+    if (latlngArray.length > 1) {
+        const lat = parseFloat(latlngArray[0].trim());
+        const lng = parseFloat(latlngArray[1].trim());
         currCoordinates = [lat, lng];
+        earth.setView(currCoordinates, 3);
+        earth.setZoom(12);
+    } else {
+        earth.setView(currCoordinates, 3);
     }
 
-    earth.setView(currCoordinates, 3);
     const radius = 10000;
 
     let view = urlParams.get('view');
@@ -160,32 +166,24 @@ function getShashin() {
     const urlParams = new URLSearchParams(window.location.search);
     let offset = urlParams.get('offset');
     let limit = urlParams.get('limit');
-    let startDate = urlParams.get('start');
-    let endDate = urlParams.get('end');
-    let lat = urlParams.get('lat');
-    let lng = urlParams.get('lng');
-    if (lat === null || lng === null) {
-         lat = "";
-         lng = "";
+    let dateRange = urlParams.get('range');
+    let startDate = "";
+    let endDate = "";
+    if (dateRange !== null) {
+        const dateRangeArr = dateRange.split(",");
+        if (dateRangeArr.length > 1) {
+            startDate = dateRangeArr[0].trim();
+            endDate = dateRangeArr[1].trim();
+        }
+    } else {
+        dateRange = "";
+    }
+    let latlng = urlParams.get('latlng');
+    if (latlng === null) {
+        latlng = "";
     }
 
     showMarkerImage = urlParams.get('marker');
-
-    if ((startDate === null || startDate === "") && (endDate === null || endDate === "")) {
-        // showToast("Info", "No dates set. Defaulting to latest 500 results.");
-        startDate = "";
-        endDate = "";
-    } else if ((startDate === null || startDate === "") && endDate !== null && endDate !== "") {
-        console.warn("Warning: Start date missing. Defaulting dates to empty string.");
-        showToast("Warning", "Start date missing. Defaulting to retrieve first 500 available results.", "#CC5500");
-        startDate = "";
-        endDate = "";
-    } else if ((endDate === null || endDate === "") && startDate !== null && startDate !== "") {
-        console.warn("Warning: End date missing. Defaulting dates to empty string.");
-        showToast("Warning", "End date missing. Defaulting to retrieve first 500 available results.", "#CC5500");
-        startDate = "";
-        endDate = "";
-    }
 
     if (startDate !== "" && !isValidDate(startDate)) {
         console.warn("Warning: Start date invalid. Must be format YYY-MM-DD.");
@@ -238,10 +236,8 @@ function getShashin() {
         '<strong>marker</strong>: ' + (showMarkerImage === true ? "true" : "false") + "<br>" +
         '<strong>offset</strong>: ' + offset + "<br>" +
         '<strong>limit</strong>: ' + limit + "<br>" +
-        '<strong>start</strong>: ' + startDate + "<br>" +
-        '<strong>end</strong>: ' + endDate + "<br>" +
-        '<strong>lat</strong>: ' + lat + "<br>" +
-        '<strong>lng</strong>: ' + lng;
+        '<strong>range</strong>: ' + dateRange + "<br>" +
+        '<strong>latlng</strong>: ' + latlng;
 
     const popover = bootstrap.Popover.getOrCreateInstance('#infoPopover') // Returns a Bootstrap popover instance
     popover.setContent({

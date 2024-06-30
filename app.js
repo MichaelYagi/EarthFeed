@@ -246,7 +246,6 @@ function getShashin() {
     });
 
     apiRequest("proxy.php", "POST", params, function (response) {
-        // console.log(response);
         data = response;
 
         if (data.hasOwnProperty("mapdata") && data.hasOwnProperty("keywordMap") && data.hasOwnProperty("baseUrl")) {
@@ -291,19 +290,11 @@ function getShashin() {
                             markerContent += placeNameStr + "<br><br>";
                         }
 
-                        let keywordListStr = "";
                         if (keywordMap.hasOwnProperty(metadata["id"])) {
                             const keywordList = keywordMap[metadata["id"]];
                             if (keywordList.length > 0) {
-                                keywordListStr = keywordList.join(", ");
-                                if (keywordListStr !== "unidentified objects") {
-                                    markerContent += "Keywords: " + keywordListStr + ((placeType.length > 0) ? (", " + placeType) : "") + "<br><br>";
-                                } else {
-                                    keywordListStr = "";
-                                }
-                            }
-
-                            if (keywordListStr.length === 0 && placeType.length > 0) {
+                                markerContent += "Keywords: " + keywordList + ((placeType.length > 0) ? (", " + placeType) : "") + "<br><br>";
+                            } else if (keywordList.length === 0 && placeType.length > 0) {
                                 markerContent += "Keywords: " + placeType + "<br><br>";
                             }
                         }

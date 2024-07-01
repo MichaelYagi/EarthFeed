@@ -290,10 +290,11 @@ function getShashin() {
                             markerContent += placeNameStr + "<br><br>";
                         }
 
+                        let keywordList = "";
                         if (keywordMap.hasOwnProperty(metadata["id"])) {
-                            const keywordList = keywordMap[metadata["id"]];
+                            keywordList = keywordMap[metadata["id"]];
                             if (keywordList.length > 0) {
-                                markerContent += "Keywords: " + keywordList + ((placeType.length > 0) ? (", " + placeType) : "") + "<br><br>";
+                                markerContent += "Keywords: " + keywordList.replace(",", ", ") + ((placeType.length > 0) ? (", " + placeType) : "") + "<br><br>";
                             } else if (keywordList.length === 0 && placeType.length > 0) {
                                 markerContent += "Keywords: " + placeType + "<br><br>";
                             }
@@ -308,7 +309,7 @@ function getShashin() {
 
                         if (query !== "" &&
                             placeNameRaw.toLowerCase().indexOf(query.toLowerCase()) === -1 &&
-                            keywordListStr.toLowerCase().indexOf(query.toLowerCase()) === -1 &&
+                            keywordList.toLowerCase().indexOf(query.toLowerCase()) === -1 &&
                             markerContent.toLowerCase().indexOf(query.toLowerCase()) === -1 &&
                             metadata["id"].toLowerCase().indexOf(query.toLowerCase()) === -1 &&
                             metadata["thumbnailUrlSmall"].toLowerCase().indexOf(query.toLowerCase()) === -1

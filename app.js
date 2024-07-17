@@ -35,7 +35,7 @@ function initialize() {
         const lng = parseFloat(latlngArray[1].trim());
         currCoordinates = [lat, lng];
         earth.setView(currCoordinates, 3);
-        earth.setZoom(17);
+        earth.setZoom(20);
     } else {
         earth.setView(currCoordinates, 3);
     }

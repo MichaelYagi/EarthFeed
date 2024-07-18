@@ -300,6 +300,9 @@ function getShashin() {
                             }
                         }
 
+                        markerContent += metadata["lat"]+","+ metadata["lng"]+"&nbsp;&nbsp;<a href='javascript:;' onclick='copyCoordinates(\""+metadata["lat"]+","+ metadata["lng"]+"\");return false;' title='Copy coordinates'>&loz;</a><br><br>";
+                        markerContent += "<input type='hidden' id='latlngValue' value='"+metadata["lat"]+","+ metadata["lng"]+"'>";
+
                         const viewerUrl = (metadata["type"].indexOf("video") > -1) ? baseUrl + "/video/" + metadata["id"] + "/player" : baseUrl + "/image/" + metadata["id"] + "/viewer";
                         if (metadata["type"].indexOf("video") > -1) {
                             markerContent += "<a href='" + viewerUrl + "' target='_blank'>Video link</a>";
@@ -343,6 +346,35 @@ function getShashin() {
         document.getElementById("submit").disabled = false;
         document.getElementById("query").disabled = false;
     });
+}
+
+function copyCoordinates(coordinates) {
+    // Navigator clipboard api needs a secure context (https)
+    if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(coordinates);
+    } else {
+        // Use the 'out of viewport hidden text area' trick
+        const textArea = document.createElement("textarea");
+        textArea.value = coordinates;
+
+        // Move textarea out of the viewport so it's not visible
+        textArea.style.position = "absolute";
+        textArea.style.left = "-999999px";
+
+        document.body.prepend(textArea);
+        textArea.select();
+
+        try {
+            document.execCommand('copy');
+        } catch (error) {
+            showToast("Error!", coordinates + " could not be copied! " + error);
+        } finally {
+            textArea.remove();
+            showToast("Coordinates copied!", coordinates + " copied!");
+        }
+    }
+
+
 }
 
 function apiRequest(url, action, params, callback) {

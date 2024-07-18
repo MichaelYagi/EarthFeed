@@ -4,6 +4,7 @@ let query = "";
 let currMarkers = {};
 let animateRequest;
 let showMarkerImage = true;
+let resultCount = 0;
 const mapMarkerSize = 30;
 document.getElementById("rotateToggle").disabled = true;
 document.getElementById("submit").disabled = true;
@@ -237,7 +238,8 @@ function getShashin() {
         '<strong>offset</strong>: ' + offset + "<br>" +
         '<strong>limit</strong>: ' + limit + "<br>" +
         '<strong>range</strong>: ' + dateRange + "<br>" +
-        '<strong>latlng</strong>: ' + latlng;
+        '<strong>latlng</strong>: ' + latlng + "<br>" +
+        '<strong>results</strong>: <span id="resultValue"></span>';
 
     const popover = bootstrap.Popover.getOrCreateInstance('#infoPopover') // Returns a Bootstrap popover instance
     popover.setContent({
@@ -253,7 +255,7 @@ function getShashin() {
             const keywordMap = data["keywordMap"];
             const baseUrl = data["baseUrl"];
 
-            let resultCount = 0;
+            resultCount = 0;
 
             for (let i = 0; i < mapdata.length; i++) {
                 const metadata = mapdata[i];
@@ -448,6 +450,17 @@ function showToast(title, message, colour, target) {
 const popoverTrigger = document.getElementById("infoPopover");
 new bootstrap.Popover(popoverTrigger, {
     html: true
+});
+
+popoverTrigger.addEventListener('show.bs.popover', function () {
+    console.log(resultCount)
+    let obEl = "resultValue";
+    let obTimeout = 3000;
+    waitForElement("#"+obEl, obTimeout).then(function() {
+        document.getElementById("resultValue").innerHTML = resultCount.toString();
+    }).catch(() => {
+        console.log(observableEl + " element did not load in " + (observableTimeout/1000) + " seconds");
+    });
 });
 
 const toastEl = document.getElementById("webglEarthToast");

@@ -453,7 +453,6 @@ new bootstrap.Popover(popoverTrigger, {
 });
 
 popoverTrigger.addEventListener('show.bs.popover', function () {
-    console.log(resultCount)
     let obEl = "resultValue";
     let obTimeout = 3000;
     waitForElement("#"+obEl, obTimeout).then(function() {

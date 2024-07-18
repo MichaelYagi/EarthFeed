@@ -14,7 +14,7 @@ Query parameters
 |```range```|<nobr>```YYYY-MM-DD,YYYY-MM-DD```</nobr>|Default is to get the first 500 available results|Start date must set before or equal to end date. eg. ```2015-03-01,2015-03-04```|
 |```offset```|```numeric```|```0```|The number of results to skip before returning anything|
 |```limit```|```numeric```|```500```|The number of results returned|
-|```latlng```|```latitude,longitude```|Default is 49.169087251026724, -123.1464338053518|Set the latitude and longitude|
+|```latlng```|```latitude,longitude```|Default on initialization is 49.169087251026724, -123.1464338053518|Set the latitude and longitude|
 
 eg. ```index.html?start=2015-03-01&end=2015-03-30&limit=100```
 

@@ -367,14 +367,12 @@ function copyCoordinates(coordinates) {
         try {
             document.execCommand('copy');
         } catch (error) {
-            showToast("Error!", coordinates + " could not be copied! " + error);
+            showToast("Error!", coordinates + " could not be copied! " + error, "#FF0000");
         } finally {
             textArea.remove();
             showToast("Coordinates copied!", coordinates + " copied!");
         }
     }
-
-
 }
 
 function apiRequest(url, action, params, callback) {

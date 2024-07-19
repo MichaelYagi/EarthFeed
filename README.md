@@ -12,7 +12,7 @@ Query parameters
 |```view```|```street\|sat```|```street```|Street or satellite view|
 |```marker```|```boolean```|```true```|Use image map markers if set to true|
 |```range```|<nobr>```YYYY-MM-DD,YYYY-MM-DD```</nobr>|N/A<br>Default is to get the first 500 available results|Start date must set before or equal to end date. eg. ```2015-03-01,2015-03-04```|
-|```offset```|```numeric```|```0```|The number of results to skip before returning anything|
+|```offset```|```numeric```|```0```|The number of results to skip|
 |```limit```|```numeric```|```500```|The number of results returned|
 |```latlng```|```latitude,longitude```|Default on initialization is 49.169087251026724, -123.1464338053518|Set the latitude and longitude|
 

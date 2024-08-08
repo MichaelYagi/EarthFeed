@@ -353,7 +353,11 @@ function getShashin() {
 function copyCoordinates(coordinates) {
     // Navigator clipboard api needs a secure context (https)
     if (navigator.clipboard && window.isSecureContext) {
-        navigator.clipboard.writeText(coordinates);
+        navigator.clipboard.writeText(coordinates).then(function () {
+            showToast("Coordinates copied!", coordinates + " copied!");
+        }).catch(function (err) {
+            showToast("Error!", coordinates + " could not be copied! " + error, "#FF0000");
+        });
     } else {
         // Use the 'out of viewport hidden text area' trick
         const textArea = document.createElement("textarea");

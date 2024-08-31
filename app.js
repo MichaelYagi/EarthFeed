@@ -209,6 +209,16 @@ function getShashin() {
             console.warn("Warning: Start date must not be greater than end date.");
             showToast("Warning", "Start date must not be greater than end date. Defaulting to retrieve first 500 available results.", "#CC5500");
         }
+
+        const startDateArray = startDate.split(" ");
+        if (startDateArray.length === 1) {
+            startDate = startDate + " 00:00:00";
+        }
+        const endDateArray = endDate.split(" ");
+        if (endDateArray.length === 1) {
+            endDate = endDate + " 23:59:59";
+        }
+
     }
 
     if (offset === null) {
@@ -248,7 +258,7 @@ function getShashin() {
 
     const popover = bootstrap.Popover.getOrCreateInstance('#infoPopover') // Returns a Bootstrap popover instance
     popover.setContent({
-        '.popover-header': 'Parameter Values',
+        '.popover-header': 'Parameter Values <a target="_blank" href="https://github.com/MichaelYagi/EarthFeed">?</a>',
         '.popover-body': popoverBody
     });
 

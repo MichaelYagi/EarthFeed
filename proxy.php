@@ -27,8 +27,8 @@ if (isset($params["offset"]) && isset($params["limit"]) && isset($params["startD
     $data = [
         'offset' => $offset,
         'limit' => $limit,
-        'startDate' => $startDate,
-        'endDate' => $endDate
+        'startDate' => $startDate . " 00:00:00",
+        'endDate' => $endDate . " 23:59:59"
     ];
 
     $headers = [

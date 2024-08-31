@@ -13,10 +13,10 @@ if (!empty($data)) {
     $params = json_decode($data, true);
 }
 
-if (isset($params["offset"]) && isset($params["limit"]) && isset($params["startDate"]) && isset($params["endDate"]) && isset($configs["shashinUrl"]) && isset($configs["shashinApiKey"])) {
+if (isset($params["page"]) && isset($params["size"]) && isset($params["startDate"]) && isset($params["endDate"]) && isset($configs["shashinUrl"]) && isset($configs["shashinApiKey"])) {
 
-    $offset = $params["offset"];
-    $limit = $params["limit"];
+    $page = $params["page"];
+    $size = $params["size"];
     $startDate = $params["startDate"];
     $endDate = $params["endDate"];
 
@@ -25,8 +25,8 @@ if (isset($params["offset"]) && isset($params["limit"]) && isset($params["startD
     $apiUrl = $baseUrl."/api/v1/mapdata/keywords";
 
     $data = [
-        'offset' => $offset,
-        'limit' => $limit,
+        'page' => $page,
+        'size' => $size,
         'startDate' => $startDate,
         'endDate' => $endDate
     ];
@@ -57,11 +57,11 @@ if (isset($params["offset"]) && isset($params["limit"]) && isset($params["startD
     }
 } else {
     $missingParams = "";
-    if (!isset($params["offset"])) {
-        $missingParams .= "offset, ";
+    if (!isset($params["page"])) {
+        $missingParams .= "page, ";
     }
-    if (!isset($params["limit"])) {
-        $missingParams .= "limit, ";
+    if (!isset($params["size"])) {
+        $missingParams .= "size, ";
     }
     if (!isset($params["startDate"])) {
         $missingParams .= "startDate, ";

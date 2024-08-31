@@ -170,8 +170,8 @@ function getShashin() {
     document.getElementById("query").disabled = true;
 
     const urlParams = new URLSearchParams(window.location.search);
-    let offset = urlParams.get('offset');
-    let limit = urlParams.get('limit');
+    let page = urlParams.get('page');
+    let size = urlParams.get('size');
     let dateRange = urlParams.get('range');
     let startDate = "";
     let endDate = "";
@@ -221,12 +221,12 @@ function getShashin() {
 
     }
 
-    if (offset === null) {
-        offset = 0;
+    if (page === null) {
+        page = 0;
     }
 
-    if (limit === null) {
-        limit = 500;
+    if (size === null) {
+        size = 500;
     }
 
     if (showMarkerImage === null) {
@@ -242,16 +242,16 @@ function getShashin() {
     clearMarkers(earth);
 
     const params = {
-        offset: offset,
-        limit: limit,
+        page: page,
+        size: size,
         startDate: startDate,
         endDate: endDate
     };
 
     const popoverBody = '<strong>view</strong>: ' + (urlParams.get('view') === null ? "street" : urlParams.get('view')) + "<br>" +
         '<strong>marker</strong>: ' + (showMarkerImage === true ? "true" : "false") + "<br>" +
-        '<strong>offset</strong>: ' + offset + "<br>" +
-        '<strong>limit</strong>: ' + limit + "<br>" +
+        '<strong>page</strong>: ' + page + "<br>" +
+        '<strong>size</strong>: ' + size + "<br>" +
         '<strong>range</strong>: ' + dateRange + "<br>" +
         '<strong>latlng</strong>: ' + latlng + "<br>" +
         '<strong>results</strong>: <span id="resultValue"></span>';

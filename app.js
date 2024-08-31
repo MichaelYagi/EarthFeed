@@ -131,6 +131,11 @@ function initialize() {
 }
 
 function isValidDate(dateString) {
+    const dateStringArray = dateString.split(" ");
+    if (dateStringArray.length > 1) {
+        dateString = dateStringArray[0];
+    }
+
     // First check for the pattern
     if (!/^\d{4}\-\d\d\-\d\d$/.test(dateString) && !/^\d{4}\-\d{1,2}\-\d{1,2}$/.test(dateString)
     ) {

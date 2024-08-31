@@ -21,14 +21,22 @@ if (isset($params["offset"]) && isset($params["limit"]) && isset($params["startD
     $endDate = $params["endDate"];
     $baseUrl = $configs["shashinUrl"];
     $apiKey = $configs["shashinApiKey"];
+    $startDateArray = explode(" ", $startDate);
+    if (count($startDateArray) == 1) {
+        $startDate = $startDate . " 00:00:00";
+    }
+    $endDateArray = explode(" ", $endDate);
+    if (count($endDateArray) == 1) {
+        $endDate = $endDate . " 23:59:59";
+    }
 
     $apiUrl = $baseUrl."/api/v1/mapdata/keywords";
 
     $data = [
         'offset' => $offset,
         'limit' => $limit,
-        'startDate' => $startDate . " 00:00:00",
-        'endDate' => $endDate . " 23:59:59"
+        'startDate' => $startDate,
+        'endDate' => $endDate
     ];
 
     $headers = [

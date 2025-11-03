@@ -278,7 +278,7 @@ function getShashin() {
                 if (metadata["lat"] != null && metadata["lng"] != null) {
                     let marker = null;
                     if (showMarkerImage === true) {
-                        marker = WE.marker([metadata["lat"], metadata["lng"]], baseUrl + "/api/v1/thumbnails/map/" + metadata["id"], mapMarkerSize, mapMarkerSize);
+                        marker = WE.marker([metadata["lat"], metadata["lng"]], baseUrl + metadata["mapMarkerUrl"], mapMarkerSize, mapMarkerSize);
                     } else {
                         marker = WE.marker([metadata["lat"], metadata["lng"]], null, 25, 41);
                     }
@@ -286,7 +286,7 @@ function getShashin() {
                         marker["id"] = metadata["id"];
 
                         currMarkers[metadata["id"]] = marker;
-                        let markerContent = '<img src="' + baseUrl + "/api/v1/thumbnails/225/" + metadata["id"] + '" height="100" "><br>';
+                        let markerContent = '<img src="' + baseUrl + metadata["thumbnailUrlSmall"] + '" height="100" "><br>';
                         const takenDate = new Date(metadata["year"] + "-" + metadata["month"] + "-" + metadata["day"]);
                         const options = {weekday: 'long', year: 'numeric', month: 'short', day: 'numeric'};
 

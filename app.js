@@ -141,6 +141,19 @@ function initialize() {
             activePopup = null;
         }
     });
+
+
+    document.querySelector('.we-pm-icon').addEventListener('wheel', function (e) {
+  const el = this;
+  const atTop = el.scrollTop === 0;
+  const atBottom = el.scrollHeight - el.scrollTop === el.clientHeight;
+
+  if ((e.deltaY < 0 && atTop) || (e.deltaY > 0 && atBottom)) {
+    e.preventDefault();
+    e.stopPropagation();
+    el.parentElement.scrollTop += e.deltaY; // manually pass scroll up
+  }
+}, { passive: false });
 }
 
 function isValidDate(dateString) {
@@ -299,7 +312,7 @@ function getShashin() {
                         marker["id"] = metadata["id"];
 
                         currMarkers[metadata["id"]] = marker;
-                        let markerContent = '<img src="' + baseUrl + metadata["thumbnailUrlSmall"] + '" height="100" "><br>';
+                        let markerContent = '<img src="' + baseUrl + metadata["thumbnailUrlSmall"] + '" id="'+metadata["id"]+'" height="100" "><br>';
                         const takenDate = new Date(metadata["year"] + "-" + metadata["month"] + "-" + metadata["day"]);
                         const options = {weekday: 'long', year: 'numeric', month: 'short', day: 'numeric'};
 
@@ -332,6 +345,7 @@ function getShashin() {
 
                         markerContent += metadata["lat"]+","+ metadata["lng"]+"&nbsp;&nbsp;<a href='javascript:;' onclick='copyCoordinates(\""+metadata["lat"]+","+ metadata["lng"]+"\");return false;' title='Copy coordinates'>&loz;</a><br><br>";
                         markerContent += "<input type='hidden' id='latlngValue' value='"+metadata["lat"]+","+ metadata["lng"]+"'>";
+                        markerContent += "<input type='hidden' id='metadataId' value='"+metadata["id"]+"'>";
 
                         const viewerUrl = (metadata["type"].indexOf("video") > -1) ? baseUrl + "/video/" + metadata["id"] + "/player" : baseUrl + "/image/" + metadata["id"] + "/viewer";
                         if (metadata["type"].indexOf("video") > -1) {

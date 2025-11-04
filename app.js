@@ -5,7 +5,7 @@ let currMarkers = {};
 let animateRequest;
 let showMarkerImage = true;
 let resultCount = 0;
-let activePopup = null;
+let activeMarker = null;
 const mapMarkerSize = 30;
 document.getElementById("rotateToggle").disabled = true;
 document.getElementById("submit").disabled = true;
@@ -131,14 +131,14 @@ function initialize() {
     };
 
     document.body.addEventListener('click', function (e) {
-        if (e.target.tagName.toLowerCase() === "canvas" && activePopup !== null) {
-            activePopup.closePopup();
-            activePopup = null;
+        if (e.target.tagName.toLowerCase() === "canvas" && activeMarker !== null) {
+            activeMarker.closePopup();
+            activeMarker = null;
         }
 
-        if (e.target.className.toLowerCase() === "we-pp-close" && activePopup !== null) {
-            activePopup.closePopup();
-            activePopup = null;
+        if (e.target.className.toLowerCase() === "we-pp-close" && activeMarker !== null) {
+            activeMarker.closePopup();
+            activeMarker = null;
         }
     });
 }
@@ -357,11 +357,19 @@ function getShashin() {
                         marker.bindPopup(markerContent);
 
                         marker.on('click', function (e) {
-                            if (activePopup && activePopup !== marker) {
-                                activePopup.closePopup();
+                            // Other marker clicked
+                            if (activeMarker !== null && activeMarker !== marker) {
+                                activeMarker.closePopup();
+                                activeMarker = marker;
+                            // Same marker clicked
+                            } else if (activeMarker !== null && activeMarker === marker) {
+                                activeMarker.closePopup();
+                                activeMarker = null;
+                            // New window clicked
+                            } else {
+                                marker.openPopup();
+                                activeMarker = marker;
                             }
-                            marker.openPopup();
-                            activePopup = marker;
                         });
                     }
                 }

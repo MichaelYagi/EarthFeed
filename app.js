@@ -5,6 +5,7 @@ let currMarkers = {};
 let animateRequest;
 let showMarkerImage = true;
 let resultCount = 0;
+let activePopup = null;
 const mapMarkerSize = 30;
 document.getElementById("rotateToggle").disabled = true;
 document.getElementById("submit").disabled = true;
@@ -128,6 +129,18 @@ function initialize() {
             }
         }
     };
+
+    document.body.addEventListener('click', function (e) {
+        if (e.target.tagName.toLowerCase() === "canvas" && activePopup !== null) {
+            activePopup.closePopup();
+            activePopup = null;
+        }
+
+        if (e.target.className.toLowerCase() === "we-pp-close" && activePopup !== null) {
+            activePopup.closePopup();
+            activePopup = null;
+        }
+    });
 }
 
 function isValidDate(dateString) {
@@ -341,6 +354,14 @@ function getShashin() {
 
                         marker.addTo(earth);
                         marker.bindPopup(markerContent);
+
+                        marker.on('click', function (e) {
+                            if (activePopup && activePopup !== marker) {
+                                activePopup.closePopup();
+                            }
+                            marker.openPopup();
+                            activePopup = marker;
+                        });
                     }
                 }
             }

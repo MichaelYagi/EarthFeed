@@ -278,6 +278,15 @@ function getShashin() {
     apiRequest("proxy.php", "POST", params, function (response) {
         data = response;
 
+         // Helper to normalize deltaY to "pixels"
+        function normalizeDelta(e) {
+            var delta = e.deltaY;
+            // deltaMode: 0=pixels, 1=lines, 2=pages
+            if (e.deltaMode === 1) delta *= 16;           // approximate line -> pixels
+            else if (e.deltaMode === 2) delta *= window.innerHeight; // page -> pixels
+            return delta;
+        }
+
         if (data.hasOwnProperty("mapdata") && data.hasOwnProperty("keywordMap") && data.hasOwnProperty("baseUrl")) {
             const mapdata = data["mapdata"];
             const keywordMap = data["keywordMap"];
@@ -356,6 +365,7 @@ function getShashin() {
                         marker.addTo(earth);
                         marker.bindPopup(markerContent);
 
+                        // Make sure 1 popup at a time shows
                         marker.on('click', function (e) {
                             // Other marker clicked
                             if (activeMarker !== null && activeMarker !== marker) {
@@ -369,6 +379,19 @@ function getShashin() {
                             } else {
                                 marker.openPopup();
                                 activeMarker = marker;
+                            }
+                        });
+
+                        // Scroll even over markers
+                        marker.on('wheel', function (e) {
+                            if (earth) {
+                                // How many zoom levels per pixel of wheel delta
+                                const delta = normalizeDelta(e.originalEvent);
+                                const currentZoom = earth.getZoom();
+
+                                // Subtract because delta > 0 should reduce zoom (zoom out)
+                                const newZoom = currentZoom - delta * 0.0015;
+                                earth.setZoom(newZoom);
                             }
                         });
                     }

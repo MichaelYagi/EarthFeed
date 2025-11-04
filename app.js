@@ -141,19 +141,6 @@ function initialize() {
             activePopup = null;
         }
     });
-
-
-    document.querySelector('.we-pm-icon').addEventListener('wheel', function (e) {
-  const el = this;
-  const atTop = el.scrollTop === 0;
-  const atBottom = el.scrollHeight - el.scrollTop === el.clientHeight;
-
-  if ((e.deltaY < 0 && atTop) || (e.deltaY > 0 && atBottom)) {
-    e.preventDefault();
-    e.stopPropagation();
-    el.parentElement.scrollTop += e.deltaY; // manually pass scroll up
-  }
-}, { passive: false });
 }
 
 function isValidDate(dateString) {

@@ -6,6 +6,7 @@ let animateRequest;
 let showMarkerImage = true;
 let resultCount = 0;
 let activeMarker = null;
+let mousePos = { x: 0, y: 0 };
 const mapMarkerSize = 30;
 document.getElementById("rotateToggle").disabled = true;
 document.getElementById("submit").disabled = true;
@@ -278,15 +279,6 @@ function getShashin() {
     apiRequest("proxy.php", "POST", params, function (response) {
         data = response;
 
-         // Helper to normalize deltaY to "pixels"
-        function normalizeDelta(e) {
-            var delta = e.deltaY;
-            // deltaMode: 0=pixels, 1=lines, 2=pages
-            if (e.deltaMode === 1) delta *= 16;           // approximate line -> pixels
-            else if (e.deltaMode === 2) delta *= window.innerHeight; // page -> pixels
-            return delta;
-        }
-
         if (data.hasOwnProperty("mapdata") && data.hasOwnProperty("keywordMap") && data.hasOwnProperty("baseUrl")) {
             const mapdata = data["mapdata"];
             const keywordMap = data["keywordMap"];
@@ -382,17 +374,25 @@ function getShashin() {
                             }
                         });
 
-                        // Scroll even over markers
+                        // Enable scrolling over marker
                         marker.on('wheel', function (e) {
-                            if (earth) {
-                                // How many zoom levels per pixel of wheel delta
-                                const delta = normalizeDelta(e.originalEvent);
-                                const currentZoom = earth.getZoom();
+                            if (!earth) return;
+                            e.preventDefault();
 
-                                // Subtract because delta > 0 should reduce zoom (zoom out)
-                                const newZoom = currentZoom - delta * 0.0015;
-                                earth.setZoom(newZoom);
-                            }
+                            const canvas = document.querySelector("canvas");
+                            if (!canvas) return;
+
+                            // Re-dispatch the wheel event to the canvas
+                            const forwarded = new WheelEvent("wheel", {
+                                deltaY: e.originalEvent.deltaY,
+                                deltaX: e.originalEvent.deltaX,
+                                clientX: e.originalEvent.clientX,
+                                clientY: e.originalEvent.clientY,
+                                bubbles: true,
+                                cancelable: true
+                            });
+
+                            canvas.dispatchEvent(forwarded);
                         });
                     }
                 }

@@ -5,6 +5,8 @@
 // size - Maximum # of results returned, default 500
 // range - start to end date in the format `YYY-MM-DD, YYY-MM-DD`, default blank
 // marker - boolean to enable marker or not, default true
+// Shift+drag - tilt
+// Alt+drag - pan
 /**************************************************************************/
 
 let data = {};

@@ -1,3 +1,12 @@
+/**************************************************************************/
+// latlng - comma seperated latitude and longitude, default blank
+// view - street or sat, default street
+// page - page number from 0, default 0
+// size - Maximum # of results returned, default 500
+// range - start to end date in the format `YYY-MM-DD, YYY-MM-DD`, default blank
+// marker - boolean to enable marker or not, default true
+/**************************************************************************/
+
 let data = {};
 let earth;
 let query = "";
